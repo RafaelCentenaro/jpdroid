@@ -1,0 +1,124 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/black"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".PrincipalActivity" >
+
+    <ImageButton
+        android:id="@+id/btCadPessoas"
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:onClick="onClickCadPessoa"
+        android:src="@drawable/pessoa" />
+
+    <ImageButton
+        android:id="@+id/btCadProdutos"
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/btCadPessoas"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClickCadProduto"
+        android:src="@drawable/produtos" />
+
+    <ImageButton
+        android:id="@+id/btCadPedidos"
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:onClick="onClickCadPedido"
+        android:src="@drawable/pedidos" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btCadPessoas"
+        android:layout_below="@+id/btCadPessoas"
+        android:layout_marginLeft="19dp"
+        android:text="Pessoas"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btCadProdutos"
+        android:layout_centerHorizontal="true"
+        android:text="Produtos"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/btCadPedidos"
+        android:layout_below="@+id/btCadPedidos"
+        android:layout_marginRight="18dp"
+        android:text="Pedidos"
+        android:textColor="@android:color/white" />
+
+    <ImageButton
+        android:id="@+id/btImportacoes"
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="14dp"
+        android:onClick="onClickImportacao"
+        android:src="@drawable/importacoes" />
+
+    <ImageButton
+        android:id="@+id/btExportacoes"
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/btImportacoes"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClickExportacoes"
+        android:src="@drawable/exportacoes" />
+
+    <ImageButton
+        android:id="@+id/btSobre"
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/btExportacoes"
+        android:onClick="onClickSobre"
+        android:src="@drawable/sobre" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_below="@+id/btSobre"
+        android:text="  Sobre"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView5"
+        android:layout_alignBottom="@+id/textView5"
+        android:layout_alignLeft="@+id/btImportacoes"
+        android:text=" Importações"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btExportacoes"
+        android:layout_centerHorizontal="true"
+        android:text="Exportações"
+        android:textColor="@android:color/white" />
+
+</RelativeLayout>

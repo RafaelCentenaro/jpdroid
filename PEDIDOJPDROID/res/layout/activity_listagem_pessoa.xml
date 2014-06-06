@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical"
+    tools:context=".ListagemPessoaActivity" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:background="@android:color/white">"
+
+        <EditText
+            android:id="@+id/etPesquisaPessoa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="text|textCapWords" >
+        </EditText>
+
+        <ImageButton
+            android:id="@+id/btLimparPesquisaPessoa"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@android:color/white"
+            android:onClick="onbtLimparPesquisaPessoa"
+            android:src="@drawable/delete_icon" />
+
+        <ImageButton
+            android:id="@+id/btPesquisaPessoa "
+            android:layout_width="64dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.42"
+            android:background="@android:color/white"
+            android:onClick="onbtPesquisaPessoa"
+            android:src="@android:drawable/ic_menu_search" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lvListagemPessoa"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="true"
+        android:drawSelectorOnTop="true"
+        android:longClickable="true" >
+    </ListView>
+
+</LinearLayout>

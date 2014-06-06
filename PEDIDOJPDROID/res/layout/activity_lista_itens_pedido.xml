@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".ListaItensPedidoActivity" >
+
+    <TextView
+        android:id="@+id/tvIdItemPedido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Id "
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvProdudtoItens"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvIdItemPedido"
+        android:layout_alignBottom="@+id/tvIdItemPedido"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/tvIdItemPedido"
+        android:text="Produto"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvValorItens"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvQtdItens"
+        android:layout_alignBottom="@+id/tvQtdItens"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:text="Valor"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvQtdItens"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvProdudtoItens"
+        android:layout_alignBottom="@+id/tvProdudtoItens"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/tvValorItens"
+        android:text="Qtd"
+        android:textColor="@android:color/white" />
+
+</RelativeLayout>

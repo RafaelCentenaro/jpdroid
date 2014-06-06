@@ -1,0 +1,96 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical"
+    tools:context=".ItensPedidoActivity" >
+
+    <TextView
+        android:id="@+id/tvProduto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Produto:"
+        android:textColor="@android:color/white" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black" >
+
+        <EditText
+            android:id="@+id/etIdProdutoPedido"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="number" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/etNomeProdutoPedido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="text|textCapWords" />
+
+        <ImageButton
+            android:id="@+id/btPesquisaItem"
+            android:layout_width="32dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.42"
+            android:background="@android:drawable/ic_menu_search"
+            android:onClick="onbtPesquisaItem" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvQtdItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quantidade:"
+        android:textColor="@android:color/white" />
+
+    <EditText
+        android:id="@+id/etQtdItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/tvValorItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Valor:"
+        android:textColor="@android:color/white" />
+
+    <EditText
+        android:id="@+id/etValorItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal" >
+    </EditText>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <Button
+            android:id="@+id/btSalvarItemPedido"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="false"
+            android:onClick="btnSalvarItensPedidoClicked"
+            android:text="Salvar" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Pedido Jpdroid</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_pessoa">Cadastro de Pessoas</string>
+    <string name="title_activity_main">Pedido Jpdroid</string>
+    <string name="title_activity_endereco">Cadastro de Endereços</string>
+    <string name="title_activity_contato">Cadastro de Contatos</string>
+    <string name="title_activity_lista_contato">Contatos</string>
+    <string name="title_activity_lista_endereco">Endereços</string>
+
+    <string-array name="tipoContato">
+        <item>Celular</item>
+        <item>Telefone</item>
+        <item>Email</item>
+    </string-array>
+
+    <string name="title_activity_lista_cidades">Cidades</string>
+    <string name="title_activity_exportacoes">Exportações</string>
+    <string name="title_activity_listagem_pessoa">Pessoas</string>
+    <string name="title_activity_lista_pessoa">Pessoas</string>
+    <string name="title_activity_listagem_produto">Produtos</string>
+    <string name="title_activity_produto">Cadastro de Produto</string>
+    <string name="title_activity_lista_produto">Produtos</string>
+
+    <string-array name="unidadeMedida">
+        <item>Unidade</item>
+        <item>Caixa</item>
+        <item>Metros</item>
+        <item>kilos</item>
+    </string-array>
+
+    <string name="title_activity_importacoes">Importações</string>
+    <string name="title_activity_listagem_pedido">Pedidos</string>
+    <string name="title_activity_pedido">Pedido</string>
+    <string name="title_activity_itens_pedido">Itens do Pedido</string>
+    <string name="title_activity_pesquisa_dialog">Pesquisa</string>
+    <string name="title_activity_lista_pedido">Pedidos</string>
+    <string name="title_activity_lista_itens_pedido">Itens do Pedido</string>
+    <string name="title_activity_sobre">Sobre</string>
+
+</resources>

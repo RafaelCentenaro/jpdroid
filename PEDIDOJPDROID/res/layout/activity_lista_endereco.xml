@@ -1,0 +1,84 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/black"
+    tools:context=".ListaEnderecoActivity" >
+
+    <TextView
+        android:id="@+id/tvEndereco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Endereço:"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvBairroLista"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvEndereco"
+        android:layout_below="@+id/tvEnderecoListaEndereco"
+        android:text="Bairro:"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvEnderecoListaEndereco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/tvEndereco"
+        android:text="ValorEndereco"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvBairroValor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvEnderecoListaEndereco"
+        android:layout_below="@+id/tvEnderecoListaEndereco"
+        android:text="ValorBairro"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvNumeroLista"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="52dp"
+        android:text="Nº:"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvNumeroValor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="14dp"
+        android:text="0000"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvCidadeLista"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tvBairroLista"
+        android:text="Cidade:"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvCidadeValor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvCidadeLista"
+        android:layout_alignBottom="@+id/tvCidadeLista"
+        android:layout_toRightOf="@+id/tvEndereco"
+        android:text="ValorCidade"
+        android:textColor="@android:color/white" />
+
+</RelativeLayout>

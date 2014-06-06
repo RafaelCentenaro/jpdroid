@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".ListaCidadesActivity" >
+
+    <TextView
+        android:id="@+id/tvIdCidadeLista"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="00" />
+
+    <TextView
+        android:id="@+id/tvSpace1"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/tvIdCidadeLista"
+        android:text=" " />
+
+    <TextView
+        android:id="@+id/tvNomeCidade"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/tvSpace1"
+        android:text="Cidade" />
+
+    <TextView
+        android:id="@+id/tvSpace2"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/tvNomeCidade"
+        android:text=", " />
+
+    <TextView
+        android:id="@+id/tvSiglaEstado"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/tvSpace2"
+        android:text="Sigla" />
+
+</RelativeLayout>

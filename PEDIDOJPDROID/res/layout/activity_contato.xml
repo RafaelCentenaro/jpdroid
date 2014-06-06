@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical"
+    tools:context=".ContatoActivity" >
+
+    <TextView
+        android:id="@+id/tvTipoContato1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tipo:"
+        android:textColor="@android:color/white" />
+
+    <Spinner
+        android:id="@+id/spTipo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/tipoContato" />
+
+    <TextView
+        android:id="@+id/tvContato1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contato:"
+        android:textColor="@android:color/white" />
+
+    <EditText
+        android:id="@+id/etContato1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <Button
+            android:id="@+id/btSalvarContato"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="false"
+            android:onClick="btnSalvarContatoClicked"
+            android:text="Salvar" />
+    </RelativeLayout>
+
+</LinearLayout>

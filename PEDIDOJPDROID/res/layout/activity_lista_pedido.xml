@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".ListaPedidoActivity" >
+
+    <TextView
+        android:id="@+id/tvIdPedidoListagem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Id "
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvdata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvNomeCliente"
+        android:layout_alignBottom="@+id/tvNomeCliente"
+        android:layout_alignParentRight="true"
+        android:text="TextView"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvValorTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvdata"
+        android:layout_alignBottom="@+id/tvdata"
+        android:layout_marginRight="14dp"
+        android:layout_toLeftOf="@+id/tvdata"
+        android:text="TextView"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvNomeCliente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvIdPedidoListagem"
+        android:layout_alignBottom="@+id/tvIdPedidoListagem"
+        android:layout_marginLeft="14dp"
+        android:layout_toRightOf="@+id/tvIdPedidoListagem"
+        android:text="NomeCliente"
+        android:textColor="@android:color/white" />
+
+</RelativeLayout>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="br.com.rafael.pedidojpdroid"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="7" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.PrincipalActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.PessoaActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden"
+            android:label="@string/title_activity_pessoa" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.MainActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.EnderecoActivity"
+            android:label="@string/title_activity_endereco" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ContatoActivity"
+            android:label="@string/title_activity_contato" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ListaContatoActivity"
+            android:label="@string/title_activity_lista_contato" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ListaEnderecoActivity"
+            android:label="@string/title_activity_lista_endereco" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ListaCidadesActivity"
+            android:label="@string/title_activity_lista_cidades" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ExportacoesActivity"
+            android:label="@string/title_activity_exportacoes" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ListagemPessoaActivity"
+            android:label="@string/title_activity_listagem_pessoa" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ListaPessoaActivity"
+            android:label="@string/title_activity_lista_pessoa" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ListagemProdutoActivity"
+            android:label="@string/title_activity_listagem_produto" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ProdutoActivity"
+            android:label="@string/title_activity_produto" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ListaProdutoActivity"
+            android:label="@string/title_activity_lista_produto" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ImportacoesActivity"
+            android:label="@string/title_activity_importacoes" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ListagemPedidoActivity"
+            android:label="@string/title_activity_listagem_pedido" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.PedidoActivity"
+            android:label="@string/title_activity_pedido" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ItensPedidoActivity"
+            android:label="@string/title_activity_itens_pedido" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.PesquisaDialogActivity"
+            android:label="@string/title_activity_pesquisa_dialog" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ListaPedidoActivity"
+            android:label="@string/title_activity_lista_pedido" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.ListaItensPedidoActivity"
+            android:label="@string/title_activity_lista_itens_pedido" >
+        </activity>
+        <activity
+            android:name="br.com.rafael.pedidojpdroid.SobreActivity"
+            android:label="@string/title_activity_sobre" >
+        </activity>
+    </application>
+
+</manifest>

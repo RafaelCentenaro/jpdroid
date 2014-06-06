@@ -1,0 +1,91 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/black" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        tools:context=".EnderecoActivity" >
+
+        <TextView
+            android:id="@+id/tvRua"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rua:"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/etRua"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text|textCapWords" >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/tvBairro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bairro:"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/etBairro"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="20"
+            android:inputType="text|textCapWords" />
+
+        <TextView
+            android:id="@+id/tvNumero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Número:"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/etNumero"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/tvCidade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cidade:"
+            android:textColor="@android:color/white" />
+
+        <Spinner
+            android:id="@+id/spCidade"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:id="@+id/chkPrincipal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Principal"
+            android:textColor="@android:color/white" />
+
+
+
+           <Button
+               android:id="@+id/btSalvarEndereco"
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:layout_alignParentBottom="true"
+               android:layout_alignParentLeft="true"
+               android:layout_alignParentTop="false"
+               android:onClick="btnSalvarEnderecoClicked"
+               android:text="Salvar" />
+
+    </LinearLayout>
+
+</ScrollView>
