@@ -64,12 +64,15 @@ Identifica atributo como classe relacionada através de uma chave estrangeira.
 Identifica atributo como campo auxiliar para visualização de um registro.
 
 @Ignorable
+
 Identifica atributo como "Ignorable", com esta marcação o atributo não será exportado para os arquivos.
 
 @Dto
+
 Identifica classe como objeto de transferencia de dados.
 
 @DtoField
+
 Identifica atributo da classe DTO como campo.
 > **Importante:**
 
