@@ -1,6 +1,7 @@
 Jpdroid!	{#welcome}
 =====================
 
+<<<<<<< HEAD
 
 O Jpdroid (Java Persistence For Android) é uma biblioteca para Android que propõe facilitar o desenvolvimento de aplicações que necessitem persistir objetos no banco de dados SQLite.
 
@@ -107,3 +108,6 @@ Para testar as funcionalidades do framework o projeto exemplo possui:
 - Importação de Arquivo
 
 - Exportação de Arquivo
+=======
+O Jpdroid (Java Persistence For Android) é uma biblioteca para Android que propõe facilitar o desenvolvimento de aplicações que necessitem persistir objetos no banco de dados SQLite.
+>>>>>>> e75fb98080c704047441a865f50f0f848359992a
