@@ -64,7 +64,7 @@ public class ProdutoActivity extends TabActivity {
 		Intent i = getIntent();
 		_id = i.getLongExtra("_id", 0);
 		if (_id > 0) {
-			produto = (Produto) jpdroid.getObjects(Produto.class, "_id = " + _id, true).get(0);
+			produto = (Produto) jpdroid.retrieve(Produto.class, "_id = " + _id, true).get(0);
 			if (produto.getFoto() != null) {
 				ivFoto.setImageBitmap(produto.getFoto());
 			}
@@ -83,8 +83,12 @@ public class ProdutoActivity extends TabActivity {
 		try {
 			produto.setNome(etNome.getText().toString());
 			produto.setUnidadeMedida(spUnidadeMedida.getSelectedItem().toString());
-			produto.setQuantidade(Double.valueOf(etQuantidade.getText().toString()));
-			produto.setPreco(Double.valueOf(etPreco.getText().toString()));
+			if(etQuantidade.getText() != null){
+				produto.setQuantidade(Double.valueOf(etQuantidade.getText().toString()));
+			}
+			if(etPreco.getText() != null){
+				produto.setPreco(Double.valueOf(etPreco.getText().toString()));
+			}
 			produto.setFoto(loadBitmapFromView(ivFoto));
 
 			jpdroid.persist(produto);

@@ -13,17 +13,17 @@ public class Contato  implements Serializable{
   private static final long serialVersionUID = 1L;
   
 	@PrimaryKey
-	@Column(name="_id")
+	@Column
 	private long _id;
 	
-	@ForeignKey(joinEntity="Pessoa",joinPrimaryKey="_id",deleteCascade=true)
-	@Column(name="idPessoa")
+	@ForeignKey(joinEntity=Pessoa.class,joinPrimaryKey="_id",deleteCascade=true)
+	@Column
 	private long idPessoa;
 
-	@Column(name="tipo")
+	@Column
 	private String tipo;
 	
-	@Column(name="contato")
+	@Column
 	private String contato;
 
 	public long get_id() {

@@ -10,22 +10,22 @@ public class Produto  {
 
   
 	@PrimaryKey
-	@Column(name="_id")
+	@Column
 	private long _id;
 	
-	@Column(name="nome")
+	@Column
 	private String nome;
 	
-	@Column(name="unidadeMedida")
+	@Column
 	private String unidadeMedida;
 	
-	@Column(name="quantidade")
+	@Column
 	private double quantidade;
 	
-	@Column(name="preco")
+	@Column
 	private double preco;
 	
-	@Column(name="foto")
+	@Column
 	private Bitmap foto;
 
 

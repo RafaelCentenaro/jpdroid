@@ -12,13 +12,13 @@ public class Estado implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@PrimaryKey
-	@Column(name="_id")
+	@Column
 	private long _id;
 	
-	@Column(name="nome")
+	@Column
 	private String nome;
 	
-	@Column(name="sigla")
+	@Column
 	private String sigla;
 
 	public long get_id() {

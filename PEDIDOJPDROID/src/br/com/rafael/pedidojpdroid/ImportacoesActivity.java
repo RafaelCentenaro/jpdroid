@@ -19,23 +19,23 @@ public class ImportacoesActivity extends Activity {
 
 	public void onClickAtualizarProduto(View v){
 		if(dataBase.importSqlScript(ScriptPath.SdCard, "produto.sql") > 0){
-			 Toast.makeText(getBaseContext(), "Importação realizada com sucesso!", Toast.LENGTH_SHORT).show();
+			 Toast.makeText(getBaseContext(), "Importação realizada com sucesso!", Toast.LENGTH_LONG).show();
 		}else{
-			 Toast.makeText(getBaseContext(), "Ocorreu uma falha ao importar!", Toast.LENGTH_SHORT).show();
+			 Toast.makeText(getBaseContext(), "Ocorreu uma falha ao importar.Verifique no cartão sd se existe o arquivo 'produto.sql'.", Toast.LENGTH_SHORT).show();
 		}
 	}
 	public void onClickAtualizarCidade(View v){
 		if(dataBase.importSqlScript(ScriptPath.SdCard, "cidade.sql") > 0){
-			 Toast.makeText(getBaseContext(), "Importação realizada com sucesso!", Toast.LENGTH_SHORT).show();
+			 Toast.makeText(getBaseContext(), "Importação realizada com sucesso!", Toast.LENGTH_LONG).show();
 		}else{
-			 Toast.makeText(getBaseContext(), "Ocorreu uma falha ao importar!", Toast.LENGTH_SHORT).show();
+			 Toast.makeText(getBaseContext(), "Ocorreu uma falha ao importar. Verifique no cartão sd se existe o arquivo 'cidade.sql'.", Toast.LENGTH_SHORT).show();
 		}
 	}
 	public void onClickAtualizarPessoa(View v){
 		if(dataBase.importSqlScript(ScriptPath.SdCard, "pessoa.sql") > 0){
-			 Toast.makeText(getBaseContext(), "Importação realizada com sucesso!", Toast.LENGTH_SHORT).show();
+			 Toast.makeText(getBaseContext(), "Importação realizada com sucesso!", Toast.LENGTH_LONG).show();
 		}else{
-			 Toast.makeText(getBaseContext(), "Ocorreu uma falha ao importar!", Toast.LENGTH_SHORT).show();
+			 Toast.makeText(getBaseContext(), "Ocorreu uma falha ao importar. Verifique no cartão sd se existe o arquivo 'pessoa.sql'.", Toast.LENGTH_SHORT).show();
 		}
 	}
 

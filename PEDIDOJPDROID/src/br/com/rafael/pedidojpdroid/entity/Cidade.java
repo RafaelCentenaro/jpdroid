@@ -16,14 +16,14 @@ public class Cidade implements Serializable {
 
 
 	@PrimaryKey
-	@Column(name="_id")
+	@Column
 	private long _id;
 	
-	@Column(name="nome")
+	@Column
 	private String nome;
 	
-	@ForeignKey(joinEntity="Estado",joinPrimaryKey="_id")
-	@Column(name="id_estado")
+	@ForeignKey(joinEntity=Estado.class,joinPrimaryKey="_id")
+	@Column
 	private long id_estado;
 	
 	@RelationClass(relationType=RelationType.OneToMany,fieldName="estado",joinColumn="id_estado")

@@ -154,7 +154,7 @@ public class JpdroidDbHelper extends SQLiteOpenHelper {
 							if (annotationForeingKey != null) {
 								createForeinKey.append(",");
 								createForeinKey.append(" FOREIGN KEY(" + columnName + ") REFERENCES "
-								    + annotationForeingKey.joinEntity() + "(" + annotationForeingKey.joinPrimaryKey() + ") ");
+								    + annotationForeingKey.joinEntity().getSimpleName() + "(" + annotationForeingKey.joinPrimaryKey() + ") ");
 								if (annotationForeingKey.deleteCascade()) {
 									createForeinKey.append(" ON DELETE CASCADE ");
 								}

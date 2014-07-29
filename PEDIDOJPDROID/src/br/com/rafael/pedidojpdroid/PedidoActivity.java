@@ -90,7 +90,7 @@ public class PedidoActivity extends TabActivity {
 		Intent i = getIntent();
 		_id = i.getLongExtra("_id", 0);
 		if (_id > 0) {
-			pedido = (Pedido) jpdroid.getObjects(Pedido.class, "_id = " + _id, true).get(0);
+			pedido = (Pedido) jpdroid.retrieve(Pedido.class, "_id = " + _id, true).get(0);
 			itensPedido = pedido.getItensPedido();
 			etIdCliente.setText(String.valueOf(pedido.getIdCliente()));
 			etNomeCliente.setText(pedido.getCliente().getNome());

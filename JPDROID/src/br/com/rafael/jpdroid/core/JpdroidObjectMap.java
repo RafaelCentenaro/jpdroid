@@ -12,6 +12,7 @@ import android.content.ContentValues;
 import android.graphics.Bitmap;
 import br.com.rafael.jpdroid.annotations.Column;
 import br.com.rafael.jpdroid.annotations.ForeignKey;
+import br.com.rafael.jpdroid.annotations.DefaultOrder;
 import br.com.rafael.jpdroid.annotations.PrimaryKey;
 import br.com.rafael.jpdroid.annotations.RelationClass;
 import br.com.rafael.jpdroid.enums.RelationType;
@@ -38,7 +39,7 @@ public class JpdroidObjectMap {
 
 			ForeignKey annotation = field.getAnnotation(ForeignKey.class);
 
-			if (annotation != null && annotation.joinEntity().equals(referenceEntity)) {
+			if (annotation != null && annotation.joinEntity().getSimpleName().equals(referenceEntity)) {
 				fields.add(field);
 			}
 
@@ -94,6 +95,29 @@ public class JpdroidObjectMap {
 
 		}
 		return null;
+	}
+	
+	/**
+	 * Retorna os campos configurados pela anotação Order.
+	 * @param entity
+	 * @return
+	 */
+	public static String getDefaultOrderBy(Class<?> entity){
+		
+		String orderBy = "";
+		
+		Field[] fieldOrderBy = entity.getDeclaredFields();
+		for (Field field : fieldOrderBy) {
+			DefaultOrder order = field.getAnnotation(DefaultOrder.class);
+			if (order != null) {
+				if (orderBy.length() == 0) {
+					orderBy = field.getName() + " " + order.order();
+				} else {
+					orderBy += ", "+field.getName() + " " + order.order();
+				}
+			}
+		}
+		return orderBy;
 	}
 
 	/**

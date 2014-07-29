@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column
 {
-	String name();
+	String name() default "";
 	boolean nullable() default true;
 	boolean unique() default false;
 }

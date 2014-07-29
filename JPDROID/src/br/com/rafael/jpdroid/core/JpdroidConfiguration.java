@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.rafael.jpdroid.annotations.Column;
 import br.com.rafael.jpdroid.annotations.Entity;
 import br.com.rafael.jpdroid.annotations.ForeignKey;
 import br.com.rafael.jpdroid.annotations.PrimaryKey;
@@ -48,17 +47,17 @@ public class JpdroidConfiguration {
 			Annotation[] annotations = field.getAnnotations();
 			for (Annotation annotation : annotations) {
 				if (annotation.annotationType() == PrimaryKey.class) {
-					if(!field.getType().getSimpleName().equalsIgnoreCase("Long")){
-						throw new JpdroidException("O tipo para chave primária deve ser Long.");
+					if(!field.getType().getSimpleName().equalsIgnoreCase("long")){
+						throw new JpdroidException("O tipo para chave primária deve ser long.");
 					}
-					columnName = field.getAnnotation(Column.class).name();
+					if(!field.getType().isPrimitive() || !field.getType().getSimpleName().equalsIgnoreCase("long")){
+						throw new JpdroidException("A Chave primária deve ser do tipo primitivo long.");
+					}
+					columnName = field.getName();
 					if((columnName.equals("") && !field.getName().equals("_id")) || (!columnName.equals("") && !columnName.equals("_id"))){
-						throw new JpdroidException("As tabelas em android devem possuir um identificador _id para a chave primária da tabela.");
+						throw new JpdroidException("As tabelas no SQLite devem possuir um atributo '_id'  como chave primária.");
 					}
 					pkCount++;
-				}
-				if (annotation.annotationType() == Column.class && "".equals(((Column) annotation).name())) {
-					throw new JpdroidException("O parâmetro name da anotação @Column não pode ser vazio.");
 				}
 				if (annotation.annotationType() == RelationClass.class) {
 					if(((RelationClass)annotation).joinColumn().equalsIgnoreCase("")){
@@ -69,8 +68,11 @@ public class JpdroidConfiguration {
 					}
 				}
 				if (annotation.annotationType() == ForeignKey.class) {
-					if(((ForeignKey)annotation).joinEntity().equalsIgnoreCase("")){
-						throw new JpdroidException("O parâmetro joinEntity da anotação @ForeignKey não pode ser vazio.");
+					if(((ForeignKey)annotation).joinEntity() == null){
+						throw new JpdroidException("O parâmetro joinEntity da anotação @ForeignKey não pode ser nula.");
+					}
+					if(!field.getType().isPrimitive() || !field.getType().getSimpleName().equalsIgnoreCase("long")){
+						throw new JpdroidException("A Chave estrangeira '"+field.getName()+"' deve ser do tipo primitivo long.");
 					}
 					if(((ForeignKey)annotation).joinPrimaryKey().equalsIgnoreCase("")){
 						throw new JpdroidException("O parâmetro joinPrimaryKey da anotação @ForeignKey não pode ser vazio.");
@@ -80,11 +82,11 @@ public class JpdroidConfiguration {
 		}
 		if (pkCount == 0) {
 			throw new JpdroidException("A classe " + entityClass
-					+ " não é uma entidade válida, pois não possui um atributo com a anotação @PrimaryKey");
+					+ " não é uma entidade válida, pois não possui atributo vinculado com a anotação @PrimaryKey.");
 		}
 		if (pkCount > 1) {
 			throw new JpdroidException("A classe " + entityClass
-					+ " não é uma entidade válida, pois possui mais de um atributo com a anotação @PrimaryKey");
+					+ " não é uma entidade válida, pois possui mais de um atributo vinculado com a anotação @PrimaryKey.");
 		}
 
 		this.entidades.add(entityClass);

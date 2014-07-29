@@ -14,24 +14,24 @@ import br.com.rafael.jpdroid.enums.RelationType;
 public class Pedido {
 	
 	@PrimaryKey
-	@Column(name="_id")
+	@Column
 	private long _id;
 	
-	@Column(name="data")
+	@Column
 	private Date data;
 	
-	@ForeignKey(joinEntity="Pessoa",joinPrimaryKey="_id")
-	@Column(name="idCliente")
+	@ForeignKey(joinEntity=Pessoa.class,joinPrimaryKey="_id")
+	@Column
 	private long idCliente;
 	
-	@Column(name="valorTotal")
+	@Column
 	private double valorTotal;
 	
 	@RelationClass(relationType=RelationType.OneToMany,fieldName="cliente",joinColumn="idCliente",Transient=true)
 	private Pessoa cliente;
 	
-	@ForeignKey(joinEntity="Endereco",joinPrimaryKey="_id")
-	@Column(name="idEnderecoEntrega")
+	@ForeignKey(joinEntity=Endereco.class,joinPrimaryKey="_id")
+	@Column
 	private long idEnderecoEntrega;
 	
 	@RelationClass(relationType=RelationType.OneToMany,fieldName="enderecoEntrega",joinColumn="idEnderecoEntrega",Transient=true)

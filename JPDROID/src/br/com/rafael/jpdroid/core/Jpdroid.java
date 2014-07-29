@@ -4,6 +4,7 @@ import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getContentvalues;
 import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getFieldByAnnotation;
 import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getFieldsByForeignKey;
 import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getFieldsByRelationClass;
+import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getDefaultOrderBy;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -71,8 +72,8 @@ public class Jpdroid {
 	public Context getContext() {
 		return context;
 	}
-	
-  public Date  getDate() {
+
+	public Date getDate() {
 		Date d = Calendar.getInstance().getTime();
 		return d;
 	}
@@ -96,9 +97,8 @@ public class Jpdroid {
 	}
 
 	/**
-	 * Atribui um nome para o banco de dados.
-	 * Nome padrão:JpdroidDB
-	 * Obs:Não é necessário informar as extensão do banco.
+	 * Atribui um nome para o banco de dados. Nome padrão:JpdroidDB Obs:Não é
+	 * necessário informar as extensão do banco.
 	 * 
 	 * @param databaseName
 	 */
@@ -127,7 +127,8 @@ public class Jpdroid {
 	}
 
 	/**
-	 * Versão do banco, por default a versão é 1. Quando a versão do banco for diferente a base de dados será atualizada.
+	 * Versão do banco, por default a versão é 1. Quando a versão do banco for
+	 * diferente a base de dados será atualizada.
 	 * 
 	 * @param databaseVersion
 	 */
@@ -179,7 +180,8 @@ public class Jpdroid {
 				validar();
 
 				if (dbHelper == null) {
-					dbHelper = new JpdroidDbHelper(getContext(), getDatabaseName(), factory, databaseVersion);
+					dbHelper = new JpdroidDbHelper(getContext(),
+							getDatabaseName(), factory, databaseVersion);
 				}
 
 				database = dbHelper.getWritableDatabase();
@@ -199,11 +201,12 @@ public class Jpdroid {
 
 	private void validar() throws JpdroidException {
 		if (getContext() == null) {
-			throw new JpdroidException("O atributo context é nulo, configure o contexto através do método setContext()");
+			throw new JpdroidException(
+					"O atributo context é nulo, configure o contexto através do método setContext()");
 		}
 		if (dbHelper != null && !dbHelper.isValid()) {
 			throw new JpdroidException(
-			    "Nenhuma entidade foi configurada, adicione as entidades através do método addEntity().");
+					"Nenhuma entidade foi configurada, adicione as entidades através do método addEntity().");
 		}
 
 	}
@@ -268,7 +271,8 @@ public class Jpdroid {
 	 * Deleta registros da entidade.
 	 * 
 	 * @param entity
-	 * @param object - Pode ser uma lista de objetos ou um cursor.
+	 * @param object
+	 *            - Pode ser uma lista de objetos ou um cursor.
 	 * @return 1:Sucesso, -1:Erro, 0:Falha
 	 */
 	public int delete(Class<?> entity, Object object) {
@@ -289,8 +293,10 @@ public class Jpdroid {
 				Field[] fields = entity.getDeclaredFields();
 				for (Field field : fields) {
 
-					if (field.getType().getSimpleName().equalsIgnoreCase("Bitmap")
-					    || field.getType().getSimpleName().equalsIgnoreCase("Byte[]")) {
+					if (field.getType().getSimpleName()
+							.equalsIgnoreCase("Bitmap")
+							|| field.getType().getSimpleName()
+									.equalsIgnoreCase("Byte[]")) {
 						continue;
 					}
 					Column annotationColumn = field.getAnnotation(Column.class);
@@ -305,25 +311,27 @@ public class Jpdroid {
 						try {
 							if (object instanceof Cursor) {
 								Cursor cursor = (Cursor) object;
-								if(cursor.getColumnIndex(columnName) >= 0){
-									
+								if (cursor.getColumnIndex(columnName) >= 0) {
+
 									if (whereClause.length() > 0) {
 										whereClause.append(" AND ");
 									}
 									whereClause.append(columnName + " = ?");
-									
-									whereArgs.add(cursor.getString(cursor.getColumnIndex(columnName)));
+
+									whereArgs.add(cursor.getString(cursor
+											.getColumnIndex(columnName)));
 								}
 							} else {
-								
+
 								if (whereClause.length() > 0) {
 									whereClause.append(" AND ");
 								}
-								
+
 								whereClause.append(columnName + " = ?");
-								
+
 								field.setAccessible(true);
-								whereArgs.add(String.valueOf(field.get(object)));
+								whereArgs
+										.add(String.valueOf(field.get(object)));
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -332,8 +340,9 @@ public class Jpdroid {
 
 				}
 				if (whereClause.length() > 0) {
-					retorno = delete(entity.getSimpleName(), whereClause.toString(),
-					    whereArgs.toArray(new String[whereArgs.size()]));
+					retorno = delete(entity.getSimpleName(),
+							whereClause.toString(),
+							whereArgs.toArray(new String[whereArgs.size()]));
 				}
 			}
 		} catch (Exception e) {
@@ -346,14 +355,16 @@ public class Jpdroid {
 	/**
 	 * Insere objeto no banco.
 	 * 
-	 * @param entity - Instância da entidade.
+	 * @param entity
+	 *            - Instância da entidade.
 	 * @return - retorna o id
 	 */
 	private long insert(Object entity) {
 
 		ContentValues values = getContentvalues(entity);
 
-		long insertId = database.insert(entity.getClass().getSimpleName(), null, values);
+		long insertId = database.insert(entity.getClass().getSimpleName(),
+				null, values);
 
 		return insertId;
 	}
@@ -361,7 +372,8 @@ public class Jpdroid {
 	/**
 	 * Atualiza registro no banco referente ao objeto.
 	 * 
-	 * @param entity - Instância da entidade.
+	 * @param entity
+	 *            - Instância da entidade.
 	 * @return 1:Sucesso, -1:Erro, 0:falhou
 	 */
 	private long update(Object entity) {
@@ -395,8 +407,10 @@ public class Jpdroid {
 					whereClause.append(columnName + " = ?");
 
 					field.setAccessible(true);
-					if (field.get(entity) == null || String.valueOf(field.get(entity)).equals("0")) {
-						throw new JpdroidException("A coluna " + field.getName() + " não possui valor!");
+					if (field.get(entity) == null
+							|| String.valueOf(field.get(entity)).equals("0")) {
+						throw new JpdroidException("A coluna "
+								+ field.getName() + " não possui valor!");
 					}
 					whereArgs.add(String.valueOf(field.get(entity)));
 
@@ -404,8 +418,9 @@ public class Jpdroid {
 
 			}
 
-			insertId = database.update(entity.getClass().getSimpleName(), values, whereClause.toString(),
-			    whereArgs.toArray(new String[whereArgs.size()]));
+			insertId = database.update(entity.getClass().getSimpleName(),
+					values, whereClause.toString(),
+					whereArgs.toArray(new String[whereArgs.size()]));
 
 		} catch (Exception e) {
 
@@ -418,29 +433,51 @@ public class Jpdroid {
 	/**
 	 * Cria consulta sql de acordo com os parâmetros.
 	 * 
-	 * @param entity - Entidade
-	 * @param restrictions - Clasula where
+	 * @param entity
+	 *            - Entidade
+	 * @param restrictions
+	 *            - Clasula where
 	 * @return - Cursor <br>
-	 *         Dica:http://developer.android.com/reference/android/database/sqlite/SQLiteQueryBuilder.html
+	 *         Dica:http://developer.android.com/reference/android/database/
+	 *         sqlite/SQLiteQueryBuilder.html
 	 */
 	@SuppressLint("DefaultLocale")
-	public Cursor createQuery(Class<?> entity, String restrictions) {
-		if (!restrictions.toUpperCase().contains("WHERE") && restrictions.length() > 0) {
+	public Cursor createQuery(Class<?> entity, String restrictions, String order) {
+		if (!restrictions.toUpperCase().contains("WHERE")
+				&& restrictions.length() > 0) {
 			restrictions = " WHERE " + restrictions;
 		}
-		Cursor cursor = database.rawQuery("select * from " + entity.getSimpleName() + restrictions, null);
+
+		String orderBy = order;
+		if (orderBy == null || orderBy.length() == 0) {
+			orderBy = getDefaultOrderBy(entity);
+		}
+
+		if (orderBy != null && orderBy.length() > 0) {
+			restrictions += " Order By " + orderBy;
+		}
+
+		Cursor cursor = database.rawQuery(
+				"select * from " + entity.getSimpleName() + restrictions, null);
 		return cursor;
 	}
 
 	/**
 	 * Retorna todos os registros da entidade.
 	 * 
-	 * @param entity - Entidade
+	 * @param entity
+	 *            - Entidade
 	 * @return - Cursor <br>
-	 *         Dica:http://developer.android.com/reference/android/database/sqlite/SQLiteQueryBuilder.html
+	 *         Dica:http://developer.android.com/reference/android/database/
+	 *         sqlite/SQLiteQueryBuilder.html
 	 */
 	public Cursor createQuery(Class<?> entity) {
-		Cursor cursor = createQuery(entity, "");
+		Cursor cursor = createQuery(entity, "", null);
+		return cursor;
+	}
+
+	public Cursor createQuery(Class<?> entity, String restrictions) {
+		Cursor cursor = createQuery(entity, restrictions, null);
 		return cursor;
 	}
 
@@ -452,7 +489,8 @@ public class Jpdroid {
 	public void addEntity(Class<?> entity) {
 		try {
 			if (dbHelper == null) {
-				dbHelper = new JpdroidDbHelper(getContext(), getDatabaseName(), factory, databaseVersion);
+				dbHelper = new JpdroidDbHelper(getContext(), getDatabaseName(),
+						factory, databaseVersion);
 			}
 			dbHelper.addClass(entity);
 			entidades.put(entity.getSimpleName(), entity.getName());
@@ -468,19 +506,20 @@ public class Jpdroid {
 	 * @param entity
 	 * @return List<Object>
 	 */
-	public <T> List<T> getObjects(Class<T> entity) {
-		return getObjects(entity, "", false);
+	public <T> List<T> retrieve(Class<T> entity) {
+		return retrieve(entity, "",null, false);
 	}
 
 	/**
 	 * Retorna uma lista de objetos preenchidos.
 	 * 
 	 * @param entity
-	 * @param fillRelationClass - Indica se deve preencher as classes relacionadas.
+	 * @param fillRelationClass
+	 *            - Indica se deve preencher as classes relacionadas.
 	 * @return List<Object>
 	 */
-	public <T> List<T> getObjects(Class<T> entity, boolean fillRelationClass) {
-		return getObjects(entity, "", fillRelationClass);
+	public <T> List<T> retrieve(Class<T> entity, boolean fillRelationClass) {
+		return retrieve(entity, "",null, fillRelationClass);
 	}
 
 	/**
@@ -490,21 +529,42 @@ public class Jpdroid {
 	 * @param restrictions
 	 * @return List<Object>
 	 */
-	public <T> List<T> getObjects(Class<T> entity, String restrictions) {
-		return getObjects(entity, restrictions, false);
+	public <T> List<T> retrieve(Class<T> entity, String restrictions) {
+		return retrieve(entity, restrictions, null, false);
 	}
 
 	/**
 	 * Retorna uma lista de objetos preenchidos.
 	 * 
 	 * @param entity
-	 * @param restrictions - Cláusula where.
-	 * @param fillRelationClass - Indica se deve preencher as classes relacionadas.
+	 * @param restrictions
+	 *            - Cláusula where.
+	 * @param fillRelationClass
+	 *            - Indica se deve preencher as classes relacionadas.
 	 * @return List<Object>
 	 */
-	public <T> List<T> getObjects(Class<T> entity, String restrictions, boolean fillRelationClass) {
+	public <T> List<T> retrieve(Class<T> entity, String restrictions, boolean fillRelationClass) {
+		return retrieve(entity, restrictions, null, fillRelationClass);
+	}
+	/**
+	 * Retorna uma lista de objetos preenchidos.
+	 * 
+	 * @param entity
+	 * @param restrictions
+	 *            - Cláusula where.
+	 * @param fillRelationClass
+	 *            - Indica se deve preencher as classes relacionadas.
+	 * @return List<Object>
+	 */
+	public <T> List<T> retrieve(Class<T> entity, String restrictions,
+			String order, boolean fillRelationClass) {
 
 		Object retorno = null;
+		String orderBy = order;
+		
+		if (orderBy == null || orderBy.length() == 0) {
+			orderBy = getDefaultOrderBy(entity);
+		}
 
 		List<T> entityList = new ArrayList<T>();
 		try {
@@ -512,8 +572,13 @@ public class Jpdroid {
 			if (restrictions.length() > 0) {
 				restrictions = " where " + restrictions;
 			}
+			if (orderBy != null && orderBy.length() > 0) {
+				restrictions += " Order By " + orderBy;
+			}
 			String columnName;
-			Cursor cursor = database.rawQuery("select * from " + entity.getSimpleName() + restrictions, null);
+			Cursor cursor = database.rawQuery(
+					"select * from " + entity.getSimpleName() + restrictions,
+					null);
 			cursor.moveToFirst();
 			if (cursor.getCount() == 0) {
 				entityList.add(entity.newInstance());
@@ -528,7 +593,9 @@ public class Jpdroid {
 				for (Field field : fields) {
 
 					if (fillRelationClass) {
-						RelationClass relationClass = field.getAnnotation(RelationClass.class);
+
+						RelationClass relationClass = field
+								.getAnnotation(RelationClass.class);
 						if (relationClass != null) {
 							Class<? extends Object> ob = field.getType();
 
@@ -538,26 +605,40 @@ public class Jpdroid {
 
 							if (ob.isAssignableFrom(List.class)) {
 
-								ParameterizedType fieldGenericType = (ParameterizedType) field.getGenericType();
-								Class<?> fieldTypeParameterType = (Class<?>) fieldGenericType.getActualTypeArguments()[0];
+								ParameterizedType fieldGenericType = (ParameterizedType) field
+										.getGenericType();
+								Class<?> fieldTypeParameterType = (Class<?>) fieldGenericType
+										.getActualTypeArguments()[0];
 
-								sql = relationClass.joinColumn() + " = "
-								    + cursor.getLong(cursor.getColumnIndex(String.valueOf(fieldPk.getName())));
-								List<?> objetos = getObjects(fieldTypeParameterType, sql, fillRelationClass);
+								sql = relationClass.joinColumn()
+										+ " = "
+										+ cursor.getLong(cursor
+												.getColumnIndex(String
+														.valueOf(fieldPk
+																.getName())));
+								List<?> objetos = retrieve(
+										fieldTypeParameterType, sql,
+										fillRelationClass);
 								if (objetos.size() > 0) {
 									field.set(retorno, objetos);
 								}
 							} else {
 								if ((relationClass.relationType() == RelationType.OneToMany)
-								    || (relationClass.relationType() == RelationType.OneToOne)) {
+										|| (relationClass.relationType() == RelationType.OneToOne)) {
 									sql = "_id = ";
-									sql += cursor.getLong(cursor.getColumnIndex(String.valueOf(relationClass.joinColumn())));
+									sql += cursor.getLong(cursor
+											.getColumnIndex(String
+													.valueOf(relationClass
+															.joinColumn())));
 								} else {
 									sql = relationClass.joinColumn() + " = ";
-									sql += cursor.getLong(cursor.getColumnIndex(String.valueOf(fieldPk.getName())));
+									sql += cursor
+											.getLong(cursor.getColumnIndex(String
+													.valueOf(fieldPk.getName())));
 								}
-								
-								List<?> objetos = getObjects(ob, sql, fillRelationClass);
+
+								List<?> objetos = retrieve(ob, sql,
+										fillRelationClass);
 								if (objetos.size() > 0) {
 									field.set(retorno, objetos.get(0));
 								}
@@ -574,50 +655,78 @@ public class Jpdroid {
 						}
 						field.setAccessible(true);
 
-						if ("String".equalsIgnoreCase(field.getType().getSimpleName())						    
-								|| ("java.util.Date".equals(field.getType().getSimpleName()))
-						    || ("java.sql.Date".equals(field.getType().getSimpleName()))
-						    || ("Calendar".equals(field.getType().getSimpleName()))) {
+						if ("String".equalsIgnoreCase(field.getType()
+								.getSimpleName())
+								|| ("java.util.Date".equals(field.getType()
+										.getSimpleName()))
+								|| ("java.sql.Date".equals(field.getType()
+										.getSimpleName()))
+								|| ("Calendar".equals(field.getType()
+										.getSimpleName()))) {
 
-							field.set(retorno, cursor.getString(cursor.getColumnIndex(columnName)));
+							field.set(retorno, cursor.getString(cursor
+									.getColumnIndex(columnName)));
 
-						} else if ("Boolean".equalsIgnoreCase(field.getType().getSimpleName())) {
+						} else if ("Boolean".equalsIgnoreCase(field.getType()
+								.getSimpleName())) {
 
-							field.set(retorno, Boolean.valueOf(cursor.getString(cursor.getColumnIndex(columnName))));
+							field.set(retorno, Boolean.valueOf(cursor
+									.getString(cursor
+											.getColumnIndex(columnName))));
 
-						} else if ("Double".equalsIgnoreCase(field.getType().getSimpleName())) {
+						} else if ("Double".equalsIgnoreCase(field.getType()
+								.getSimpleName())) {
 
-							field.set(retorno, cursor.getDouble(cursor.getColumnIndex(columnName)));
+							field.set(retorno, cursor.getDouble(cursor
+									.getColumnIndex(columnName)));
 
-						} else if ("Float".equalsIgnoreCase(field.getType().getSimpleName())) {
+						} else if ("Float".equalsIgnoreCase(field.getType()
+								.getSimpleName())) {
 
-							field.set(retorno, cursor.getFloat(cursor.getColumnIndex(columnName)));
+							field.set(retorno, cursor.getFloat(cursor
+									.getColumnIndex(columnName)));
 
-						} else if (("Integer".equals(field.getType().getSimpleName()))
-						    || ("int".equals(field.getType().getSimpleName()))
-						    || ("Long".equalsIgnoreCase(field.getType().getSimpleName()))
-						    || ("Short".equalsIgnoreCase(field.getType().getSimpleName()))) {
+						} else if (("Integer".equals(field.getType()
+								.getSimpleName()))
+								|| ("int".equals(field.getType()
+										.getSimpleName()))
+								|| ("Long".equalsIgnoreCase(field.getType()
+										.getSimpleName()))
+								|| ("Short".equalsIgnoreCase(field.getType()
+										.getSimpleName()))) {
 
-							field.set(retorno, cursor.getInt(cursor.getColumnIndex(columnName)));
+							field.set(retorno, cursor.getInt(cursor
+									.getColumnIndex(columnName)));
 
-						} else if (("Byte[]".equalsIgnoreCase(field.getType().getSimpleName()))
-						    || ("Bitmap".equalsIgnoreCase(field.getType().getSimpleName()))) {
-							byte[] blob = cursor.getBlob(cursor.getColumnIndex(columnName));
+						} else if (("Byte[]".equalsIgnoreCase(field.getType()
+								.getSimpleName()))
+								|| ("Bitmap".equalsIgnoreCase(field.getType()
+										.getSimpleName()))) {
+							byte[] blob = cursor.getBlob(cursor
+									.getColumnIndex(columnName));
 							if (blob != null) {
-								Bitmap bmp = BitmapFactory.decodeByteArray(blob, 0, blob.length);
+								Bitmap bmp = BitmapFactory.decodeByteArray(
+										blob, 0, blob.length);
 								field.set(retorno, bmp);
 							}
 						}
 					}
-					ViewColumn viewColumn = field.getAnnotation(ViewColumn.class);
+					ViewColumn viewColumn = field
+							.getAnnotation(ViewColumn.class);
 					if (viewColumn != null) {
 						field.setAccessible(true);
-						field
-						    .set(
-						        retorno,
-						        this.rawQuery(
-						            "SELECT " + viewColumn.atributo() + " FROM " + viewColumn.entity() + " WHERE _id = "
-						                + cursor.getLong(cursor.getColumnIndex(viewColumn.foreignKey())), null).getString(0));
+						field.set(
+								retorno,
+								this.rawQuery(
+										"SELECT "
+												+ viewColumn.atributo()
+												+ " FROM "
+												+ viewColumn.entity().getSimpleName()
+												+ " WHERE _id = "
+												+ cursor.getLong(cursor
+														.getColumnIndex(viewColumn
+																.foreignKey())),
+										null).getString(0));
 					}
 
 				}
@@ -667,39 +776,49 @@ public class Jpdroid {
 				}
 			} else {
 				// Classe relacionada de um para muitos
-				Field[] fieldRelationClassOneToMany = getFieldsByRelationClass(entity, RelationType.OneToMany);
+				Field[] fieldRelationClassOneToMany = getFieldsByRelationClass(
+						entity, RelationType.OneToMany);
 				if (fieldRelationClassOneToMany != null) {
 					for (int i = 0; i < fieldRelationClassOneToMany.length; i++) {
 
 						fieldRelationClassOneToMany[i].setAccessible(true);
 
-						Object child = fieldRelationClassOneToMany[i].get(entity);
+						Object child = fieldRelationClassOneToMany[i]
+								.get(entity);
 						if (child != null) {
 							if (child instanceof List) {
 								for (Object item : ((List<?>) child)) {
 									long idItem = persistRecursivo(item);
-									Field[] fieldForeingKeyList = getFieldsByForeignKey(entity, item.getClass().getSimpleName());
+									Field[] fieldForeingKeyList = getFieldsByForeignKey(
+											entity, item.getClass()
+													.getSimpleName());
 
 									if (fieldForeingKeyList != null) {
 
 										for (int u = 0; u < fieldForeingKeyList.length; u++) {
 
-											fieldForeingKeyList[u].setAccessible(true);
-											fieldForeingKeyList[u].setLong(entity, idItem);
+											fieldForeingKeyList[u]
+													.setAccessible(true);
+											fieldForeingKeyList[u].setLong(
+													entity, idItem);
 										}
 
 									}
 								}
 							} else {
 								long idItem = persistRecursivo(child);
-								Field[] fieldForeingKeyList = getFieldsByForeignKey(entity, child.getClass().getSimpleName());
+								Field[] fieldForeingKeyList = getFieldsByForeignKey(
+										entity, child.getClass()
+												.getSimpleName());
 
 								if (fieldForeingKeyList != null) {
 
 									for (int u = 0; u < fieldForeingKeyList.length; u++) {
 
-										fieldForeingKeyList[u].setAccessible(true);
-										fieldForeingKeyList[u].setLong(entity, idItem);
+										fieldForeingKeyList[u]
+												.setAccessible(true);
+										fieldForeingKeyList[u].setLong(entity,
+												idItem);
 									}
 
 								}
@@ -712,34 +831,42 @@ public class Jpdroid {
 				if (fieldPk != null) {
 					fieldPk.setAccessible(true);
 
-					if (fieldPk.get(entity) == null || String.valueOf(fieldPk.get(entity)).equals("0")) {
+					if (fieldPk.get(entity) == null
+							|| String.valueOf(fieldPk.get(entity)).equals("0")) {
 						idMaster = insert(entity);
 					} else {
-						idMaster = Long.parseLong(String.valueOf(fieldPk.get(entity)));
+						idMaster = Long.parseLong(String.valueOf(fieldPk
+								.get(entity)));
 						update(entity);
 					}
 				}
 				// Pode existir mais de uma classe relacionada
-				Field[] fieldRelationClassManyToOne = getFieldsByRelationClass(entity, RelationType.ManyToOne);
+				Field[] fieldRelationClassManyToOne = getFieldsByRelationClass(
+						entity, RelationType.ManyToOne);
 
 				if (fieldRelationClassManyToOne != null) {
 					for (int i = 0; i < fieldRelationClassManyToOne.length; i++) {
 
 						fieldRelationClassManyToOne[i].setAccessible(true);
 
-						Object child = fieldRelationClassManyToOne[i].get(entity);
+						Object child = fieldRelationClassManyToOne[i]
+								.get(entity);
 						if (child != null) {
 							if (child instanceof List) {
 								for (Object item : ((List<?>) child)) {
 									// Pode existir mais de uma coluna foreinkey
-									Field[] fieldForeingKeyList = getFieldsByForeignKey(item, entity.getClass().getSimpleName());
+									Field[] fieldForeingKeyList = getFieldsByForeignKey(
+											item, entity.getClass()
+													.getSimpleName());
 
 									if (fieldForeingKeyList != null) {
 
 										for (int u = 0; u < fieldForeingKeyList.length; u++) {
 
-											fieldForeingKeyList[u].setAccessible(true);
-											fieldForeingKeyList[u].setLong(item, idMaster);
+											fieldForeingKeyList[u]
+													.setAccessible(true);
+											fieldForeingKeyList[u].setLong(
+													item, idMaster);
 										}
 
 									}
@@ -747,14 +874,17 @@ public class Jpdroid {
 								}
 
 							} else {
-								Field[] fieldForeingKey = getFieldsByForeignKey(child, entity.getClass().getSimpleName());
+								Field[] fieldForeingKey = getFieldsByForeignKey(
+										child, entity.getClass()
+												.getSimpleName());
 
 								if (fieldForeingKey != null) {
 
 									for (int u = 0; u < fieldForeingKey.length; u++) {
 
 										fieldForeingKey[u].setAccessible(true);
-										fieldForeingKey[u].setLong(child, idMaster);
+										fieldForeingKey[u].setLong(child,
+												idMaster);
 									}
 								}
 								persistRecursivo(child);
@@ -782,9 +912,11 @@ public class Jpdroid {
 	 * @param orderBy
 	 * @return cursor
 	 */
-	public Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy,
-	    String having, String orderBy) {
-		return database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
+	public Cursor query(String table, String[] columns, String selection,
+			String[] selectionArgs, String groupBy, String having,
+			String orderBy) {
+		return database.query(table, columns, selection, selectionArgs,
+				groupBy, having, orderBy);
 	}
 
 	/**
@@ -814,29 +946,35 @@ public class Jpdroid {
 	 * UPSERT Combustivel (nome,preco) VALUES("Gasolina",3.11); <br>
 	 * INSERT OR REPLACE INTO combustivel (nome) values("Gasolina");
 	 * 
-	 * @param scriptUri <BR>
-	 *          ScriptUri.Assets - Diretório Assets do projeto. <BR>
-	 *          ScriptUri.SdCard - Diretório do cartão SD.
-	 * @param fileName <BR>
-	 *          Nome Arquivo.
+	 * @param scriptUri
+	 * <BR>
+	 *            ScriptUri.Assets - Diretório Assets do projeto. <BR>
+	 *            ScriptUri.SdCard - Diretório do cartão SD.
+	 * @param fileName
+	 * <BR>
+	 *            Nome Arquivo.
 	 */
 	public int importSqlScript(ScriptPath scriptUri, String fileName) {
 		try {
 			String readLine = "";
 			BufferedReader reader = null;
 			if (scriptUri == ScriptPath.Assets) {
-				reader = new BufferedReader(new InputStreamReader(getContext().getAssets().open(fileName), "ISO-8859-15"));
-				
+				reader = new BufferedReader(new InputStreamReader(getContext()
+						.getAssets().open(fileName), "ISO-8859-15"));
+
 			} else {
-				if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+				if (Environment.getExternalStorageState().equals(
+						android.os.Environment.MEDIA_MOUNTED)) {
 					File dir = Environment.getExternalStorageDirectory();
 					File file = new File(dir, fileName);
-					if(!file.exists()){
+					if (!file.exists()) {
 						return 0;
 					}
-					reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "ISO-8859-15"));
+					reader = new BufferedReader(new InputStreamReader(
+							new FileInputStream(file), "ISO-8859-15"));
 				} else {
-					throw new JpdroidException("Nenhum cartão de memória foi localizado!");
+					throw new JpdroidException(
+							"Nenhum cartão de memória foi localizado!");
 				}
 			}
 			StringBuffer script = new StringBuffer();
@@ -866,16 +1004,18 @@ public class Jpdroid {
 
 	/**
 	 * UPSERT / UPDATE OR INSERT <br>
-	 * Método responsável por inserir novos registros ou atualizar registros existentes. <br>
+	 * Método responsável por inserir novos registros ou atualizar registros
+	 * existentes. <br>
 	 * <br>
-	 * O comando deve respeitar a seguinte sintaxe, lembrando que a sintaxe é case sensitive. <br>
+	 * O comando deve respeitar a seguinte sintaxe, lembrando que a sintaxe é
+	 * case sensitive. <br>
 	 * Ex:UPSERT NomeEntidade (Coluna1,Coluna2) VALUES(Valor1,Valor2); <br>
 	 * <br>
-	 * Requisito: possuir ao menos uma coluna do tipo unique.
-	 * <br>Os espaços das strings devem ser preenchidos com o caractere '#'.
-	 * <br>Exemplo:
-	 * <br>UPSERT Cidade (_id,nome,id_Estado) VALUES(0,"Dionísio Cerqueira",6);
-	 * <br>UPSERT Cidade (_id,nome,id_Estado) VALUES(0,"Dionísio#Cerqueira",6);
+	 * Requisito: possuir ao menos uma coluna do tipo unique. <br>
+	 * Os espaços das strings devem ser preenchidos com o caractere '#'. <br>
+	 * Exemplo: <br>
+	 * UPSERT Cidade (_id,nome,id_Estado) VALUES(0,"Dionísio Cerqueira",6); <br>
+	 * UPSERT Cidade (_id,nome,id_Estado) VALUES(0,"Dionísio#Cerqueira",6);
 	 * 
 	 * @param sql
 	 * @throws Exception
@@ -901,7 +1041,8 @@ public class Jpdroid {
 			valores = replace.split(",");
 
 			if (colunas.length != valores.length) {
-				throw new JpdroidException("O número de colunas não corresponde ao número de valores!");
+				throw new JpdroidException(
+						"O número de colunas não corresponde ao número de valores!");
 			}
 			for (int i = 0; i < colunas.length; i++) {
 				chaveValor.put(colunas[i].trim(), valores[i].trim());
@@ -915,21 +1056,31 @@ public class Jpdroid {
 				Column column = field.getAnnotation(Column.class);
 
 				if (column != null && column.unique()) {
-					String columName = column.name();
-					if (chaveValor.containsKey(columName)) {
-						where += " and " + columName + " = " + chaveValor.get(columName);
+					String columnName = "";
+					if ("".equals(column.name())) {
+						columnName = field.getName();
 					} else {
-						throw new JpdroidException("Coluna do tipo unique não encontrada na tabela " + comando[1] + ".");
+						columnName = column.name();
+					}
+					if (chaveValor.containsKey(columnName)) {
+						where += " and " + columnName + " = "
+								+ chaveValor.get(columnName);
+					} else {
+						throw new JpdroidException(
+								"Coluna do tipo unique não encontrada na tabela "
+										+ comando[1] + ".");
 					}
 				}
 			}
-			if(where.equals(" WHERE 0 = 0 ")){
+			if (where.equals(" WHERE 0 = 0 ")) {
 				for (String col : colunas) {
-						where += " and " + col.trim() + " = " + chaveValor.get(col.trim());
+					where += " and " + col.trim() + " = "
+							+ chaveValor.get(col.trim());
 				}
 			}
-			if(where.equals(" WHERE 0 = 0 ")){
-				throw new JpdroidException("Coluna do tipo unique não encontrada no script. Colunas marcadas como unique são obrigatorias nos comandos UPSERT.");
+			if (where.equals(" WHERE 0 = 0 ")) {
+				throw new JpdroidException(
+						"Coluna do tipo unique não encontrada no script. Colunas marcadas como unique são obrigatorias nos comandos UPSERT.");
 			}
 
 			where = where.replaceAll("#", " ");
@@ -945,7 +1096,8 @@ public class Jpdroid {
 					} else {
 						sqlExec += " SET ";
 					}
-					sqlExec += colunas[i] + " = " + chaveValor.get(colunas[i].trim());
+					sqlExec += colunas[i] + " = "
+							+ chaveValor.get(colunas[i].trim());
 				}
 				where = where.replaceAll("#", " ");
 				sqlExec += where;

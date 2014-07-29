@@ -5,24 +5,27 @@ import java.util.List;
 import android.graphics.Bitmap;
 import br.com.rafael.jpdroid.annotations.Column;
 import br.com.rafael.jpdroid.annotations.Entity;
+import br.com.rafael.jpdroid.annotations.DefaultOrder;
 import br.com.rafael.jpdroid.annotations.PrimaryKey;
 import br.com.rafael.jpdroid.annotations.RelationClass;
+import br.com.rafael.jpdroid.enums.Order;
 import br.com.rafael.jpdroid.enums.RelationType;
 
 @Entity
 public class Pessoa {
 	
 	@PrimaryKey
-	@Column(name="_id")
+	@Column
 	private long _id;
 	
-	@Column(name="nome")
+	@DefaultOrder(order=Order.asc)
+	@Column
 	private String nome;
 	
 	@RelationClass(relationType=RelationType.ManyToOne,fieldName="endereco",joinColumn="idPessoa")
 	private List<Endereco> endereco;
 	
-	@Column(name="foto")
+	@Column
 	private Bitmap foto;
 	
 	@RelationClass(relationType=RelationType.ManyToOne,fieldName="contato",joinColumn="idPessoa")

@@ -15,25 +15,25 @@ public class ItensPedido implements Serializable {
   private static final long serialVersionUID = 1L;
 
 	@PrimaryKey
-	@Column(name="_id")
+	@Column
 	private long _id;
 	
-	@ForeignKey(joinEntity="Pedido",joinPrimaryKey="_id",deleteCascade=true)
-	@Column(name="idPedido")
+	@ForeignKey(joinEntity=Pedido.class,joinPrimaryKey="_id",deleteCascade=true)
+	@Column
 	private long idPedido;
 	
 	@Ignorable
-	@ViewColumn(entity="Produto",atributo="nome",foreignKey="idProduto")
+	@ViewColumn(entity=Produto.class,atributo="nome",foreignKey="idProduto")
 	private String nomeProduto;
 	
-	@ForeignKey(joinEntity="Produto",joinPrimaryKey="_id")
-	@Column(name="idProduto")
+	@ForeignKey(joinEntity=Produto.class,joinPrimaryKey="_id")
+	@Column
 	private long idProduto;
 	
-	@Column(name="qtdProduto")
+	@Column
 	private double qtdProduto;
 	
-	@Column(name="valorUnitario")
+	@Column
 	private double valorUnitario;
 	
 

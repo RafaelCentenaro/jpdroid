@@ -5,17 +5,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import br.com.rafael.jpdroid.enums.Order;
+
 /**
- * Identifica atributo de uma classe como coluna.
+ * Define ordenação pelo atributo configurado.
  * 
  * @author Rafael Centenaro
  *
  */
 @Target({java.lang.annotation.ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ViewColumn
+public @interface DefaultOrder
 {
-	Class<?> entity();
-	String atributo();
-	String foreignKey();
+	Order order() default Order.asc;
 }

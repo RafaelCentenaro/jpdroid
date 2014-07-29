@@ -129,7 +129,7 @@ public class ListagemPessoaActivity extends Activity {
 		}else{
 			where = "nome like '%"+filtro+"%'";
 		}
-		Cursor matrixCursor = jpdroid.createQuery(Pessoa.class, where);
+		Cursor matrixCursor = jpdroid.createQuery(Pessoa.class, where," _id asc ");
 
 		SimpleCursorAdapter dataAdapter = new SimpleCursorAdapter(this, R.layout.activity_lista_pessoa, matrixCursor,
 		    columns, to, 0);

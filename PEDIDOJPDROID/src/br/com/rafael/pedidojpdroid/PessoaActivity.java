@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.Toast;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import br.com.rafael.jpdroid.core.Jpdroid;
@@ -120,7 +121,7 @@ public class PessoaActivity extends TabActivity {
 		Intent i = getIntent();
 		_id = i.getLongExtra("_id", 0);
 		if (_id > 0) {
-			pessoa = (Pessoa) jpdroid.getObjects(Pessoa.class, "_id = " + _id, true).get(0);
+			pessoa = (Pessoa) jpdroid.retrieve(Pessoa.class, "_id = " + _id, true).get(0);
 			contato = pessoa.getContato();
 			endereco = pessoa.getEndereco();
 			if (pessoa.getFoto() != null) {
@@ -159,10 +160,24 @@ public class PessoaActivity extends TabActivity {
 	public void onClickSalvarPessoa(View v) {
 
 		try {
+		
+			if(etNome.getText() == null || etNome.getText().toString().trim().length() == 0){
+				Toast.makeText(this, "Nome não informado!", Toast.LENGTH_SHORT).show();
+				etNome.requestFocus();
+				return;
+			}
+			if(contato.isEmpty()){
+				Toast.makeText(this, "Favor Cadastrar pelo menos um contato!", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			if(endereco.isEmpty()){
+				Toast.makeText(this, "Favor Cadastrar pelo menos um endereço!", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
 			pessoa.setNome(etNome.getText().toString());
 			pessoa.setFoto(loadBitmapFromView(ivFoto));
 			pessoa.setContato(contato);
-
 			pessoa.setEndereco(endereco);
 
 			jpdroid.persist(pessoa);

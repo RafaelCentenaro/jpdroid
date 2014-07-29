@@ -60,7 +60,7 @@ public class ItensPedidoActivity extends Activity {
 
 
 	private String getNomeProduto(long idProduto) {
-		Produto produto = jpdroid.getObjects(Produto.class,"_id = "+idProduto).get(0);
+		Produto produto = jpdroid.retrieve(Produto.class,"_id = "+idProduto).get(0);
 	  return produto.getNome();
   }
 

@@ -17,34 +17,34 @@ public class Endereco implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@PrimaryKey
-	@Column(name = "_id")
+	@Column
 	private long _id;
 
-	@ForeignKey(joinEntity = "Pessoa", joinPrimaryKey = "_id", deleteCascade = true)
+	@ForeignKey(joinEntity = Pessoa.class, joinPrimaryKey = "_id", deleteCascade = true)
 	@Column(name = "idPessoa", nullable = false)
 	private long idPessoa;
 
-	@Column(name = "rua")
+	@Column
 	private String rua;
 
-	@Column(name = "bairro")
+	@Column
 	private String bairro;
 
-	@Column(name = "numero")
+	@Column
 	private long numero;
 
-	@ForeignKey(joinEntity = "Cidade", joinPrimaryKey = "_id")
-	@Column(name = "id_Cidade")
+	@ForeignKey(joinEntity = Cidade.class, joinPrimaryKey = "_id")
+	@Column
 	private long id_Cidade;
 
 	@RelationClass(relationType = RelationType.OneToMany, fieldName = "cidade", joinColumn = "id_Cidade",Transient=true)
 	private Cidade cidade;
 
-	@Column(name = "principal")
+	@Column
 	private boolean principal;
 
 	@Ignorable
-	@ViewColumn(entity="Cidade",atributo="nome",foreignKey="id_Cidade")
+	@ViewColumn(entity=Cidade.class,atributo="nome",foreignKey="id_Cidade")
 	private String nomeCidade;
 
 	public long get_id() {

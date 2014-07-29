@@ -18,7 +18,7 @@ public @interface ForeignKey {
 	 * Entidade relacionada.
 	 * @return
 	 */
-	String  joinEntity();
+	Class<?>  joinEntity();
 	/**
 	 * Coluna chave primária da entidade relacionada.
 	 * @return

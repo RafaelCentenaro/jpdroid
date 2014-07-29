@@ -122,17 +122,17 @@ public class ExportacoesActivity extends Activity {
 			case EXPORT_PEDIDO:
 				if (chkPeriodo.isChecked()) {
 					JpdroidCsvFile.export(
-					    jpdroid.getObjects(Pedido.class, " date(data) BETWEEN '" + getDataFormat(dataInicial) + "' AND '"
+					    jpdroid.retrieve(Pedido.class, " date(data) BETWEEN '" + getDataFormat(dataInicial) + "' AND '"
 					        + getDataFormat(dataFim) + "' ", true), "PedidoExport.csv");
 				} else {
-					JpdroidCsvFile.export(jpdroid.getObjects(Pedido.class, true), "PedidoExport.csv");
+					JpdroidCsvFile.export(jpdroid.retrieve(Pedido.class, true), "PedidoExport.csv");
 				}
 				break;
 			case EXPORT_PRODUTO:
-				JpdroidCsvFile.export(jpdroid.getObjects(Produto.class, true), "ProdutoExport.csv");
+				JpdroidCsvFile.export(jpdroid.retrieve(Produto.class, true), "ProdutoExport.csv");
 				break;
 			case EXPORT_PESSOA:
-				JpdroidCsvFile.export(jpdroid.getObjects(Pessoa.class, true), "PessoaExport.csv");
+				JpdroidCsvFile.export(jpdroid.retrieve(Pessoa.class, true), "PessoaExport.csv");
 				break;
 			default:
 		}
@@ -144,17 +144,17 @@ public class ExportacoesActivity extends Activity {
 			case EXPORT_PEDIDO:
 				if (chkPeriodo.isChecked()) {
 					JpdroidJsonFile.export(
-					    jpdroid.getObjects(Pedido.class, " date(data) BETWEEN '" + getDataFormat(dataInicial) + "' AND '"
+					    jpdroid.retrieve(Pedido.class, " date(data) BETWEEN '" + getDataFormat(dataInicial) + "' AND '"
 					        + getDataFormat(dataFim) + "' ", true), "PedidoExport.json");
 				} else {
-					JpdroidJsonFile.export(jpdroid.getObjects(Pedido.class, true), "PedidoExport.json");
+					JpdroidJsonFile.export(jpdroid.retrieve(Pedido.class, true), "PedidoExport.json");
 				}
 				break;
 			case EXPORT_PRODUTO:
-				JpdroidJsonFile.export(jpdroid.getObjects(Produto.class, true), "ProdutoExport.json");
+				JpdroidJsonFile.export(jpdroid.retrieve(Produto.class, true), "ProdutoExport.json");
 				break;
 			case EXPORT_PESSOA:
-				JpdroidJsonFile.export(jpdroid.getObjects(Pessoa.class, true), "PessoaExport.json");
+				JpdroidJsonFile.export(jpdroid.retrieve(Pessoa.class, true), "PessoaExport.json");
 				break;
 			default:
 		}
@@ -166,17 +166,17 @@ public class ExportacoesActivity extends Activity {
 			case EXPORT_PEDIDO:
 				if (chkPeriodo.isChecked()) {
 					JpdroidXmlFile.export(
-					    jpdroid.getObjects(Pedido.class, " date(data) BETWEEN '" + getDataFormat(dataInicial) + "' AND '"
+					    jpdroid.retrieve(Pedido.class, " date(data) BETWEEN '" + getDataFormat(dataInicial) + "' AND '"
 					        + getDataFormat(dataFim) + "' ", true), "PedidoExport.xml");
 				} else {
-					JpdroidXmlFile.export(jpdroid.getObjects(Pedido.class, true), "PedidoExport.xml");
+					JpdroidXmlFile.export(jpdroid.retrieve(Pedido.class, true), "PedidoExport.xml");
 				}
 				break;
 			case EXPORT_PRODUTO:
-				JpdroidXmlFile.export(jpdroid.getObjects(Produto.class, true), "ProdutoExport.xml");
+				JpdroidXmlFile.export(jpdroid.retrieve(Produto.class, true), "ProdutoExport.xml");
 				break;
 			case EXPORT_PESSOA:
-				JpdroidXmlFile.export(jpdroid.getObjects(Pessoa.class, true), "PessoaExport.xml");
+				JpdroidXmlFile.export(jpdroid.retrieve(Pessoa.class, true), "PessoaExport.xml");
 				break;
 			default:
 		}
