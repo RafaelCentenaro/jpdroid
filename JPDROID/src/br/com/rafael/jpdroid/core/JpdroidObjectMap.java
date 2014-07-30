@@ -255,4 +255,36 @@ public class JpdroidObjectMap {
 		}
 		return values;
 	}
+
+	public static List<ForeignKey> getForeingKeys(Class<?> entity) {
+		List<ForeignKey> fk = new ArrayList<ForeignKey>();
+
+		Field[] declaredFields = entity.getDeclaredFields();
+		for (Field field : declaredFields) {
+
+			ForeignKey foreignKey = field.getAnnotation(ForeignKey.class);
+
+			if (foreignKey != null) {
+				fk.add(foreignKey);
+			}
+
+		}
+		return fk;
+	}
+
+	public static Field getFieldPk(Object entity) {
+		Field[] declaredFields = entity.getClass().getDeclaredFields();
+		for (Field field : declaredFields) {
+
+			PrimaryKey primaryKey = field.getAnnotation(PrimaryKey.class);
+
+			if (primaryKey != null) {
+				field.setAccessible(true);
+				return field;
+			}
+
+		}
+		return null;
+
+	}
 }

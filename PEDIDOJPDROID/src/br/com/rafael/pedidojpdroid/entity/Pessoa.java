@@ -22,13 +22,13 @@ public class Pessoa {
 	@Column
 	private String nome;
 	
-	@RelationClass(relationType=RelationType.ManyToOne,fieldName="endereco",joinColumn="idPessoa")
+	@RelationClass(relationType=RelationType.ManyToOne,joinColumn="idPessoa")
 	private List<Endereco> endereco;
 	
 	@Column
 	private Bitmap foto;
 	
-	@RelationClass(relationType=RelationType.ManyToOne,fieldName="contato",joinColumn="idPessoa")
+	@RelationClass(relationType=RelationType.ManyToOne,joinColumn="idPessoa")
 	private List<Contato> contato;
 
 	public long get_id() {

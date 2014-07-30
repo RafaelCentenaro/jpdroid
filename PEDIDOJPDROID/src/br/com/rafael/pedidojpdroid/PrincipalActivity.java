@@ -27,15 +27,20 @@ public class PrincipalActivity extends Activity {
 
 		dataBase = Jpdroid.getInstance();
 		dataBase.setContext(this);
+		dataBase.setDatabaseVersion(10);
 		
-		dataBase.addEntity(Estado.class);
+		dataBase.addEntity(ItensPedido.class);
+		
 		dataBase.addEntity(Cidade.class);
-		dataBase.addEntity(Pessoa.class);
+		dataBase.addEntity(Estado.class);
+		
 		dataBase.addEntity(Endereco.class);
+		dataBase.addEntity(Pessoa.class);
+		
 		dataBase.addEntity(Contato.class);
 		dataBase.addEntity(Produto.class);
 		dataBase.addEntity(Pedido.class);
-		dataBase.addEntity(ItensPedido.class);
+		
 		
 		dataBase.open();
 		

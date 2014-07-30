@@ -37,7 +37,7 @@ public class Endereco implements Serializable {
 	@Column
 	private long id_Cidade;
 
-	@RelationClass(relationType = RelationType.OneToMany, fieldName = "cidade", joinColumn = "id_Cidade",Transient=true)
+	@RelationClass(relationType = RelationType.OneToMany, joinColumn = "id_Cidade",Transient=true)
 	private Cidade cidade;
 
 	@Column

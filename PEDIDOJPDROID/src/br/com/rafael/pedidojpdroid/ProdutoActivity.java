@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 import br.com.rafael.jpdroid.core.Jpdroid;
 import br.com.rafael.jpdroid.exceptions.JpdroidException;
@@ -81,8 +82,15 @@ public class ProdutoActivity extends TabActivity {
 	public void ClickSalvarProduto(View v) {
 
 		try {
+			if(etNome.getText() == null || etNome.getText().toString().trim().length() == 0){
+				Toast.makeText(this, "Nome não informado!", Toast.LENGTH_SHORT).show();
+				etNome.requestFocus();
+				return;
+			}
+			
 			produto.setNome(etNome.getText().toString());
 			produto.setUnidadeMedida(spUnidadeMedida.getSelectedItem().toString());
+			
 			if(etQuantidade.getText() != null){
 				produto.setQuantidade(Double.valueOf(etQuantidade.getText().toString()));
 			}

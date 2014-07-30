@@ -29,9 +29,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.Toast;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
+import android.widget.Toast;
 import br.com.rafael.jpdroid.core.Jpdroid;
 import br.com.rafael.jpdroid.exceptions.JpdroidException;
 import br.com.rafael.jpdroid.util.JpdroidConverter;
@@ -138,8 +138,10 @@ public class PessoaActivity extends TabActivity {
 
 		// Oculta teclado ao criar a Activity
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+		
 
 	}
+
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -160,7 +162,7 @@ public class PessoaActivity extends TabActivity {
 	public void onClickSalvarPessoa(View v) {
 
 		try {
-		
+			
 			if(etNome.getText() == null || etNome.getText().toString().trim().length() == 0){
 				Toast.makeText(this, "Nome não informado!", Toast.LENGTH_SHORT).show();
 				etNome.requestFocus();

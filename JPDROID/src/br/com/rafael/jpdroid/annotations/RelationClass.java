@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 import br.com.rafael.jpdroid.enums.RelationType;
 
 /**
- * Identifica atributo de uma classe como classe relacionada.
+ * Identifica atributo como classe relacionada.
  * 
  * @author Rafael Centenaro
  *
@@ -16,15 +16,12 @@ import br.com.rafael.jpdroid.enums.RelationType;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RelationClass {
 	/**
-	 * Nome do atributo na classe.
-	 * @return
-	 */
-	String fieldName();
-	/**
 	 * Nome coluna utilizada no relacionamento.
 	 * @return
 	 */
-	String joinColumn();
+	String joinColumn() default "";
+	
+	String joinTable() default "";
 	/**
 	 * Tipo de relacionamento.
 	 * @return

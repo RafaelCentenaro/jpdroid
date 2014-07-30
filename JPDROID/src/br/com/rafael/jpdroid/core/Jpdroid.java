@@ -1,10 +1,10 @@
 package br.com.rafael.jpdroid.core;
 
 import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getContentvalues;
+import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getDefaultOrderBy;
 import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getFieldByAnnotation;
 import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getFieldsByForeignKey;
 import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getFieldsByRelationClass;
-import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getDefaultOrderBy;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import android.annotation.SuppressLint;
@@ -45,6 +46,7 @@ import br.com.rafael.jpdroid.exceptions.JpdroidException;
 public class Jpdroid {
 
 	TreeMap<String, String> entidades = new TreeMap<String, String>();
+	
 
 	/**
 	 * Indica se existe conexão aberta.
@@ -363,7 +365,11 @@ public class Jpdroid {
 
 		ContentValues values = getContentvalues(entity);
 
-		long insertId = database.insert(entity.getClass().getSimpleName(),
+		return insert(values,entity.getClass().getSimpleName());
+	}
+	private long insert(ContentValues values,String tableName) {
+
+		long insertId = database.insert(tableName,
 				null, values);
 
 		return insertId;
@@ -507,7 +513,7 @@ public class Jpdroid {
 	 * @return List<Object>
 	 */
 	public <T> List<T> retrieve(Class<T> entity) {
-		return retrieve(entity, "",null, false);
+		return retrieve(entity, "", null, false,null);
 	}
 
 	/**
@@ -519,7 +525,7 @@ public class Jpdroid {
 	 * @return List<Object>
 	 */
 	public <T> List<T> retrieve(Class<T> entity, boolean fillRelationClass) {
-		return retrieve(entity, "",null, fillRelationClass);
+		return retrieve(entity, "", null, fillRelationClass,null);
 	}
 
 	/**
@@ -530,22 +536,9 @@ public class Jpdroid {
 	 * @return List<Object>
 	 */
 	public <T> List<T> retrieve(Class<T> entity, String restrictions) {
-		return retrieve(entity, restrictions, null, false);
+		return retrieve(entity, restrictions, null, false,null);
 	}
 
-	/**
-	 * Retorna uma lista de objetos preenchidos.
-	 * 
-	 * @param entity
-	 * @param restrictions
-	 *            - Cláusula where.
-	 * @param fillRelationClass
-	 *            - Indica se deve preencher as classes relacionadas.
-	 * @return List<Object>
-	 */
-	public <T> List<T> retrieve(Class<T> entity, String restrictions, boolean fillRelationClass) {
-		return retrieve(entity, restrictions, null, fillRelationClass);
-	}
 	/**
 	 * Retorna uma lista de objetos preenchidos.
 	 * 
@@ -557,11 +550,43 @@ public class Jpdroid {
 	 * @return List<Object>
 	 */
 	public <T> List<T> retrieve(Class<T> entity, String restrictions,
-			String order, boolean fillRelationClass) {
+			boolean fillRelationClass) {
+		return retrieve(entity, restrictions, null, fillRelationClass, null);
+	}
 
+	/**
+	 * Retorna uma lista de objetos preenchidos.
+	 * 
+	 * @param entity
+	 * @param restrictions
+	 *            - Cláusula where.
+	 * @param fillRelationClass
+	 *            - Indica se deve preencher as classes relacionadas.
+	 * @param order
+	 * @return List<Object>
+	 */
+	public <T> List<T> retrieve(Class<T> entity, String restrictions,
+			String order, boolean fillRelationClass) {
+		return retrieve(entity, restrictions, order, fillRelationClass, null);
+	}
+	
+	/**
+	 *  Retorna uma lista de objetos preenchidos.
+	 *  
+	 * @param entity
+	 * @param lastEntity - Para casos que existe relacionamento ManyToMany
+	 * @param restrictions
+	 * @param order
+	 * @param fillRelationClass
+	 * @return
+	 */
+	private <T> List<T> retrieve(Class<T> entity, String restrictions,
+			String order, boolean fillRelationClass, Class<?> lastEntity) {
+
+		
 		Object retorno = null;
 		String orderBy = order;
-		
+
 		if (orderBy == null || orderBy.length() == 0) {
 			orderBy = getDefaultOrderBy(entity);
 		}
@@ -597,6 +622,7 @@ public class Jpdroid {
 						RelationClass relationClass = field
 								.getAnnotation(RelationClass.class);
 						if (relationClass != null) {
+
 							Class<? extends Object> ob = field.getType();
 
 							field.setAccessible(true);
@@ -609,6 +635,19 @@ public class Jpdroid {
 										.getGenericType();
 								Class<?> fieldTypeParameterType = (Class<?>) fieldGenericType
 										.getActualTypeArguments()[0];
+								
+								boolean ignoreChild  = lastEntity != null && lastEntity.equals(fieldTypeParameterType) && relationClass.relationType().equals(RelationType.ManyToMany);
+
+								if (relationClass.relationType().equals(RelationType.ManyToMany)) {
+									sql = "_id in (SELECT _id"
+											+ fieldTypeParameterType.getSimpleName()
+											+ " from "
+											+ relationClass.joinTable()
+											+ " where _id"+ entity.getSimpleName()+ " = "
+											+ cursor.getLong(cursor.getColumnIndex(String
+													.valueOf(fieldPk.getName())))
+											+ " )";
+								}else{
 
 								sql = relationClass.joinColumn()
 										+ " = "
@@ -616,12 +655,17 @@ public class Jpdroid {
 												.getColumnIndex(String
 														.valueOf(fieldPk
 																.getName())));
-								List<?> objetos = retrieve(
-										fieldTypeParameterType, sql,
-										fillRelationClass);
-								if (objetos.size() > 0) {
-									field.set(retorno, objetos);
 								}
+								
+								
+								
+								if(!ignoreChild){
+									List<?> objetos = retrieve(fieldTypeParameterType, sql, null, fillRelationClass, entity);
+									if (objetos.size() > 0) {
+										field.set(retorno, objetos);
+									}
+								}
+
 							} else {
 								if ((relationClass.relationType() == RelationType.OneToMany)
 										|| (relationClass.relationType() == RelationType.OneToOne)) {
@@ -721,7 +765,8 @@ public class Jpdroid {
 										"SELECT "
 												+ viewColumn.atributo()
 												+ " FROM "
-												+ viewColumn.entity().getSimpleName()
+												+ viewColumn.entity()
+														.getSimpleName()
 												+ " WHERE _id = "
 												+ cursor.getLong(cursor
 														.getColumnIndex(viewColumn
@@ -735,6 +780,8 @@ public class Jpdroid {
 		} catch (Exception e) {
 			Log.e("Erro getObjects()", e.getMessage());
 		}
+		
+				
 		return entityList;
 	}
 
@@ -849,28 +896,47 @@ public class Jpdroid {
 
 						fieldRelationClassManyToOne[i].setAccessible(true);
 
-						Object child = fieldRelationClassManyToOne[i]
-								.get(entity);
+						Object child = fieldRelationClassManyToOne[i].get(entity);
+						
+						RelationClass relationClass = fieldRelationClassManyToOne[i].getAnnotation(RelationClass.class);
+						
+						List<ContentValues> values = null;
+						
+						if(child != null && relationClass != null && relationClass.relationType().equals(RelationType.ManyToMany)){
+							values = new ArrayList<ContentValues>();
+						}
 						if (child != null) {
 							if (child instanceof List) {
 								for (Object item : ((List<?>) child)) {
-									// Pode existir mais de uma coluna foreinkey
-									Field[] fieldForeingKeyList = getFieldsByForeignKey(
-											item, entity.getClass()
-													.getSimpleName());
-
-									if (fieldForeingKeyList != null) {
-
-										for (int u = 0; u < fieldForeingKeyList.length; u++) {
-
-											fieldForeingKeyList[u]
-													.setAccessible(true);
-											fieldForeingKeyList[u].setLong(
-													item, idMaster);
+									
+									if(relationClass != null && relationClass.relationType().equals(RelationType.ManyToMany)){
+										ContentValues val = new ContentValues();
+										val.put("_id"+entity.getClass().getSimpleName(), idMaster);
+										val.put("_id"+item.getClass().getSimpleName(), JpdroidObjectMap.getFieldPk(item).getLong(item) );
+										values.add(val);										
+									}else{
+										// Pode existir mais de uma coluna foreinkey
+										Field[] fieldForeingKeyList = getFieldsByForeignKey(
+												item, entity.getClass()
+														.getSimpleName());
+	
+										if (fieldForeingKeyList != null) {
+	
+											for (int u = 0; u < fieldForeingKeyList.length; u++) {
+	
+												fieldForeingKeyList[u]
+														.setAccessible(true);
+												fieldForeingKeyList[u].setLong(
+														item, idMaster);
+											}
+	
 										}
-
+										persistRecursivo(item);
 									}
-									persistRecursivo(item);
+									
+								}
+								if(relationClass != null && relationClass.relationType().equals(RelationType.ManyToMany)){
+									persistRelationEntity(values,relationClass.joinTable(),"_id"+entity.getClass().getSimpleName()+" = "+ idMaster);
 								}
 
 							} else {
@@ -900,6 +966,54 @@ public class Jpdroid {
 		}
 		return idMaster;
 
+	}
+
+	private void persistRelationEntity(List<ContentValues> values, String joinTable, String whereAll) 
+	{
+	
+		if(!values.isEmpty()){
+			
+			List<String> chaves = new ArrayList<String>();
+			for (ContentValues contentValues : values) {
+				String where = "";
+				for(Entry<String, Object> e : contentValues.valueSet()) {
+					if(chaves.size() < 2){
+						chaves.add(e.getKey());
+					}
+					
+					where += where.length() == 0 ? e.getKey()+" = "+e.getValue().toString() : " and "+ e.getKey()+" = "+e.getValue().toString();
+			   
+			    }
+							
+				if(database.rawQuery("SELECT * FROM "+joinTable+" WHERE "+where,null).getCount() == 0){
+					insert(contentValues, joinTable);
+				}
+				
+			}
+			
+			Cursor registros = database.rawQuery("SELECT * FROM "+joinTable+" WHERE "+whereAll,null);
+			registros.moveToFirst();
+			do{
+		
+				int count = 0;
+				for (ContentValues contentValues : values) {
+					if(contentValues.getAsLong(chaves.get(0)) == registros.getLong(registros.getColumnIndex(chaves.get(0))) && 
+							contentValues.getAsLong(chaves.get(1)) == registros.getLong(registros.getColumnIndex(chaves.get(1)))){
+						count++;
+					}
+				}
+				if(count == 0){
+					String whereDelete = chaves.get(0) + " = "+ String.valueOf(registros.getLong(registros.getColumnIndex(chaves.get(0))))+" AND "+
+					chaves.get(1) + " = "+ String.valueOf(registros.getLong(registros.getColumnIndex(chaves.get(1))));
+					
+					database.execSQL("DELETE FROM "+joinTable+" WHERE "+whereDelete.toString());
+				}
+				
+				
+			} while (registros.moveToNext());
+		}else{
+			database.execSQL("DELETE FROM "+joinTable+" WHERE "+whereAll);
+		}
 	}
 
 	/**

@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Identifica atributo de uma classe como coluna.
+ * Identifica atributo a ser ignorado na exportação de dados.
  * 
  * @author Rafael Centenaro
  *

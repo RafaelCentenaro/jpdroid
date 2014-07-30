@@ -27,17 +27,17 @@ public class Pedido {
 	@Column
 	private double valorTotal;
 	
-	@RelationClass(relationType=RelationType.OneToMany,fieldName="cliente",joinColumn="idCliente",Transient=true)
+	@RelationClass(relationType=RelationType.OneToMany,joinColumn="idCliente",Transient=true)
 	private Pessoa cliente;
 	
 	@ForeignKey(joinEntity=Endereco.class,joinPrimaryKey="_id")
 	@Column
 	private long idEnderecoEntrega;
 	
-	@RelationClass(relationType=RelationType.OneToMany,fieldName="enderecoEntrega",joinColumn="idEnderecoEntrega",Transient=true)
+	@RelationClass(relationType=RelationType.OneToMany,joinColumn="idEnderecoEntrega",Transient=true)
 	private Endereco enderecoEntrega;
 	
-	@RelationClass(relationType=RelationType.ManyToOne,fieldName="itensPedido",joinColumn="idPedido")
+	@RelationClass(relationType=RelationType.ManyToOne,joinColumn="idPedido")
 	private List<ItensPedido> itensPedido;
 
 	public long get_id() {

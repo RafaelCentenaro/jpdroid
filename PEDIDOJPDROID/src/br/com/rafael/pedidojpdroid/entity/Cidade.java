@@ -26,7 +26,7 @@ public class Cidade implements Serializable {
 	@Column
 	private long id_estado;
 	
-	@RelationClass(relationType=RelationType.OneToMany,fieldName="estado",joinColumn="id_estado")
+	@RelationClass(relationType=RelationType.OneToMany,joinColumn="id_estado")
 	private Estado estado;
 	
 	public long get_id() {
