@@ -124,7 +124,7 @@ Para testar as funcionalidades do framework o projeto exemplo possui:
 
 -Simplificado o método de mapeamento objeto relacional, ao configurar um atributo como coluna, não é mais obrigatório informar o nome do atributo.
 
--Não é mais necessário adicionar as entidades na order correta para criação dos relacionamentos, a adição poderá ser aleatória.
+-Não é mais necessário adicionar as entidades na ordem correta para criação dos relacionamentos, a adição poderá ser aleatória.
 
 -O relacionamento ManyToMany gera automáticamente a tabela associativa.
 
