@@ -67,6 +67,10 @@ Identifica atributo como campo auxiliar para visualização de um registro.
 
 Identifica atributo como "Ignorable", com esta marcação o atributo não será exportado para os arquivos.
 
+@DefaultOrder
+
+Define ordenação padrão pelo atributo anotado.
+
 @Dto
 
 Identifica classe como objeto de transferencia de dados.
@@ -111,3 +115,15 @@ Para testar as funcionalidades do framework o projeto exemplo possui:
 - Importação de Arquivo
 
 - Exportação de Arquivo
+
+----------
+
+
+Últimas Atualizações
+-----------
+
+-Simplificado o método de mapeamento objeto relacional, ao configurar um atributo como coluna, não é mais obrigatório informar o nome do atributo.
+-Não é mais necessário adicionar as entidades na order correta para criação dos relacionamentos, a adição poderá ser aleatória.
+-O relacionamento ManyToMany gera automáticamente a tabela associativa.
+
+*Em breve será disponibilizado um tutorial para faciliar o desenvolvimento.
