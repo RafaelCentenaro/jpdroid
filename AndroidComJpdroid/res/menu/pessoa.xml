@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.rafael.androidcomjpdroid.PessoaActivity" >
+    <item android:id="@+id/editarPessoa" android:title="Editar"></item><item android:id="@+id/excluirPessoa" android:title="Excluir"></item>
+    
+
+</menu>

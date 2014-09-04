@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.rafael.androidcomjpdroid.ContatoActivity" >
+    <item android:id="@+id/editarContato" android:title="Editar"></item><item android:id="@+id/excluirContato" android:title="Excluir"></item>
+    
+
+</menu>
