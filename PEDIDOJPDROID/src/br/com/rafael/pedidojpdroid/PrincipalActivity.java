@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.View;
 import br.com.rafael.jpdroid.core.Jpdroid;
 import br.com.rafael.jpdroid.enums.ScriptPath;
+import br.com.rafael.jpdroid.exceptions.JpdroidException;
 import br.com.rafael.pedidojpdroid.entity.Cidade;
 import br.com.rafael.pedidojpdroid.entity.Contato;
 import br.com.rafael.pedidojpdroid.entity.Endereco;
@@ -27,8 +28,8 @@ public class PrincipalActivity extends Activity {
 
 		dataBase = Jpdroid.getInstance();
 		dataBase.setContext(this);
-		dataBase.setDatabaseVersion(10);
-		
+		dataBase.setDatabaseVersion(12);
+
 		dataBase.addEntity(ItensPedido.class);
 		
 		dataBase.addEntity(Cidade.class);
@@ -41,7 +42,6 @@ public class PrincipalActivity extends Activity {
 		dataBase.addEntity(Produto.class);
 		dataBase.addEntity(Pedido.class);
 		
-		
 		dataBase.open();
 		
  		if(dataBase.isCreate()){
@@ -50,10 +50,9 @@ public class PrincipalActivity extends Activity {
 
 	}
 
-	public void onClickCadPessoa(View v){
+	public void onClickCadPessoa(View v) throws JpdroidException{
 		Intent i = new Intent(this,ListagemPessoaActivity.class);
 		startActivity(i);
-		
 	}
 	public void onClickCadProduto(View v){
 		Intent i = new Intent(this,ListagemProdutoActivity.class);

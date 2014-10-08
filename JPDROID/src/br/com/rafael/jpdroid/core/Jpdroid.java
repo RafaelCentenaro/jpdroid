@@ -46,7 +46,39 @@ import br.com.rafael.jpdroid.exceptions.JpdroidException;
 public class Jpdroid {
 
 	TreeMap<String, String> entidades = new TreeMap<String, String>();
-	
+
+	private SQLiteDatabase database;
+
+	private JpdroidDbHelper dbHelper;
+
+	private Context context;
+
+	private JpdroidTransaction transaction = null;
+
+	private static Jpdroid jpdroid = null;
+
+	private String databaseName = "JpdroidDB.db";
+
+	private CursorFactory factory;
+
+	private int databaseVersion = 1;
+
+	/**
+	 * Retorna instância da classe Jpdroid.
+	 * 
+	 * @return
+	 */
+	public static Jpdroid getInstance() {
+		if (jpdroid == null) {
+			jpdroid = new Jpdroid();
+			return jpdroid;
+		}
+		return jpdroid;
+	}
+
+	private Jpdroid() {
+
+	}
 
 	/**
 	 * Indica se existe conexão aberta.
@@ -60,11 +92,14 @@ public class Jpdroid {
 		return database.isOpen();
 	}
 
-	private SQLiteDatabase database;
-
-	private JpdroidDbHelper dbHelper;
-
-	private Context context;
+	/**
+	 * Retorna informações sobre o framework.
+	 * 
+	 * @return
+	 */
+	public JpdroidAbout getAbout() {
+		return new JpdroidAbout();
+	}
 
 	/**
 	 * Retorna o contexto.
@@ -113,12 +148,6 @@ public class Jpdroid {
 		}
 	}
 
-	private String databaseName = "JpdroidDB.db";
-
-	private CursorFactory factory;
-
-	private int databaseVersion = 1;
-
 	/**
 	 * Retorna a versão do banco.
 	 * 
@@ -145,27 +174,6 @@ public class Jpdroid {
 	 */
 	public SQLiteDatabase getDatabase() {
 		return database;
-	}
-
-	private JpdroidTransaction transaction = null;
-
-	private static Jpdroid jpdroid = null;
-
-	/**
-	 * Retorna instância da classe Jpdroid.
-	 * 
-	 * @return
-	 */
-	public static Jpdroid getInstance() {
-		if (jpdroid == null) {
-			jpdroid = new Jpdroid();
-			return jpdroid;
-		}
-		return jpdroid;
-	}
-
-	private Jpdroid() {
-
 	}
 
 	/**
@@ -201,6 +209,15 @@ public class Jpdroid {
 		}
 	}
 
+	/**
+	 * Fecha conexão com o banco de dados.
+	 */
+	public void close() {
+		if (isOpen()) {
+			dbHelper.close();
+		}
+	}
+
 	private void validar() throws JpdroidException {
 		if (getContext() == null) {
 			throw new JpdroidException(
@@ -211,15 +228,6 @@ public class Jpdroid {
 					"Nenhuma entidade foi configurada, adicione as entidades através do método addEntity().");
 		}
 
-	}
-
-	/**
-	 * Fecha conexão com o banco de dados.
-	 */
-	public void close() {
-		if (isOpen()) {
-			dbHelper.close();
-		}
 	}
 
 	/**
@@ -365,12 +373,12 @@ public class Jpdroid {
 
 		ContentValues values = getContentvalues(entity);
 
-		return insert(values,entity.getClass().getSimpleName());
+		return insert(values, entity.getClass().getSimpleName());
 	}
-	private long insert(ContentValues values,String tableName) {
 
-		long insertId = database.insert(tableName,
-				null, values);
+	private long insert(ContentValues values, String tableName) {
+
+		long insertId = database.insert(tableName, null, values);
 
 		return insertId;
 	}
@@ -499,7 +507,8 @@ public class Jpdroid {
 						factory, databaseVersion);
 			}
 			dbHelper.addClass(entity);
-			entidades.put(entity.getSimpleName(), entity.getName());
+			entidades.put(entity.getSimpleName().toUpperCase(),
+					entity.getName());
 		} catch (Exception e) {
 			Log.e("Erro addEntity()", e.getMessage());
 		}
@@ -513,7 +522,7 @@ public class Jpdroid {
 	 * @return List<Object>
 	 */
 	public <T> List<T> retrieve(Class<T> entity) {
-		return retrieve(entity, "", null, false,null);
+		return retrieve(entity, "", null, false, null);
 	}
 
 	/**
@@ -525,7 +534,7 @@ public class Jpdroid {
 	 * @return List<Object>
 	 */
 	public <T> List<T> retrieve(Class<T> entity, boolean fillRelationClass) {
-		return retrieve(entity, "", null, fillRelationClass,null);
+		return retrieve(entity, "", null, fillRelationClass, null);
 	}
 
 	/**
@@ -536,7 +545,7 @@ public class Jpdroid {
 	 * @return List<Object>
 	 */
 	public <T> List<T> retrieve(Class<T> entity, String restrictions) {
-		return retrieve(entity, restrictions, null, false,null);
+		return retrieve(entity, restrictions, null, false, null);
 	}
 
 	/**
@@ -569,12 +578,13 @@ public class Jpdroid {
 			String order, boolean fillRelationClass) {
 		return retrieve(entity, restrictions, order, fillRelationClass, null);
 	}
-	
+
 	/**
-	 *  Retorna uma lista de objetos preenchidos.
-	 *  
+	 * Retorna uma lista de objetos preenchidos.
+	 * 
 	 * @param entity
-	 * @param lastEntity - Para casos que existe relacionamento ManyToMany
+	 * @param lastEntity
+	 *            - Para casos que existe relacionamento ManyToMany
 	 * @param restrictions
 	 * @param order
 	 * @param fillRelationClass
@@ -583,7 +593,6 @@ public class Jpdroid {
 	private <T> List<T> retrieve(Class<T> entity, String restrictions,
 			String order, boolean fillRelationClass, Class<?> lastEntity) {
 
-		
 		Object retorno = null;
 		String orderBy = order;
 
@@ -635,32 +644,38 @@ public class Jpdroid {
 										.getGenericType();
 								Class<?> fieldTypeParameterType = (Class<?>) fieldGenericType
 										.getActualTypeArguments()[0];
-								
-								boolean ignoreChild  = lastEntity != null && lastEntity.equals(fieldTypeParameterType) && relationClass.relationType().equals(RelationType.ManyToMany);
 
-								if (relationClass.relationType().equals(RelationType.ManyToMany)) {
+								boolean ignoreChild = lastEntity != null
+										&& lastEntity
+												.equals(fieldTypeParameterType)
+										&& relationClass.relationType().equals(
+												RelationType.ManyToMany);
+
+								if (relationClass.relationType().equals(
+										RelationType.ManyToMany)) {
 									sql = "_id in (SELECT _id"
-											+ fieldTypeParameterType.getSimpleName()
+											+ fieldTypeParameterType
+													.getSimpleName()
 											+ " from "
 											+ relationClass.joinTable()
-											+ " where _id"+ entity.getSimpleName()+ " = "
+											+ " where _id"
+											+ entity.getSimpleName()
+											+ " = "
 											+ cursor.getLong(cursor.getColumnIndex(String
 													.valueOf(fieldPk.getName())))
 											+ " )";
-								}else{
+								} else {
 
-								sql = relationClass.joinColumn()
-										+ " = "
-										+ cursor.getLong(cursor
-												.getColumnIndex(String
-														.valueOf(fieldPk
-																.getName())));
+									sql = relationClass.joinColumn()
+											+ " = "
+											+ cursor.getLong(cursor.getColumnIndex(String
+													.valueOf(fieldPk.getName())));
 								}
-								
-								
-								
-								if(!ignoreChild){
-									List<?> objetos = retrieve(fieldTypeParameterType, sql, null, fillRelationClass, entity);
+
+								if (!ignoreChild) {
+									List<?> objetos = retrieve(
+											fieldTypeParameterType, sql, null,
+											fillRelationClass, entity);
 									if (objetos.size() > 0) {
 										field.set(retorno, objetos);
 									}
@@ -780,8 +795,7 @@ public class Jpdroid {
 		} catch (Exception e) {
 			Log.e("Erro getObjects()", e.getMessage());
 		}
-		
-				
+
 		return entityList;
 	}
 
@@ -896,47 +910,69 @@ public class Jpdroid {
 
 						fieldRelationClassManyToOne[i].setAccessible(true);
 
-						Object child = fieldRelationClassManyToOne[i].get(entity);
-						
-						RelationClass relationClass = fieldRelationClassManyToOne[i].getAnnotation(RelationClass.class);
-						
+						Object child = fieldRelationClassManyToOne[i]
+								.get(entity);
+
+						RelationClass relationClass = fieldRelationClassManyToOne[i]
+								.getAnnotation(RelationClass.class);
+
 						List<ContentValues> values = null;
-						
-						if(child != null && relationClass != null && relationClass.relationType().equals(RelationType.ManyToMany)){
+
+						if (child != null
+								&& relationClass != null
+								&& relationClass.relationType().equals(
+										RelationType.ManyToMany)) {
 							values = new ArrayList<ContentValues>();
 						}
 						if (child != null) {
 							if (child instanceof List) {
 								for (Object item : ((List<?>) child)) {
-									
-									if(relationClass != null && relationClass.relationType().equals(RelationType.ManyToMany)){
+
+									if (relationClass != null
+											&& relationClass
+													.relationType()
+													.equals(RelationType.ManyToMany)) {
 										ContentValues val = new ContentValues();
-										val.put("_id"+entity.getClass().getSimpleName(), idMaster);
-										val.put("_id"+item.getClass().getSimpleName(), JpdroidObjectMap.getFieldPk(item).getLong(item) );
-										values.add(val);										
-									}else{
-										// Pode existir mais de uma coluna foreinkey
+										val.put("_id"
+												+ entity.getClass()
+														.getSimpleName(),
+												idMaster);
+										val.put("_id"
+												+ item.getClass()
+														.getSimpleName(),
+												JpdroidObjectMap.getFieldPk(
+														item).getLong(item));
+										values.add(val);
+									} else {
+										// Pode existir mais de uma coluna
+										// foreinkey
 										Field[] fieldForeingKeyList = getFieldsByForeignKey(
 												item, entity.getClass()
 														.getSimpleName());
-	
+
 										if (fieldForeingKeyList != null) {
-	
+
 											for (int u = 0; u < fieldForeingKeyList.length; u++) {
-	
+
 												fieldForeingKeyList[u]
 														.setAccessible(true);
 												fieldForeingKeyList[u].setLong(
 														item, idMaster);
 											}
-	
+
 										}
 										persistRecursivo(item);
 									}
-									
+
 								}
-								if(relationClass != null && relationClass.relationType().equals(RelationType.ManyToMany)){
-									persistRelationEntity(values,relationClass.joinTable(),"_id"+entity.getClass().getSimpleName()+" = "+ idMaster);
+								if (relationClass != null
+										&& relationClass.relationType().equals(
+												RelationType.ManyToMany)) {
+									persistRelationEntity(values,
+											relationClass.joinTable(), "_id"
+													+ entity.getClass()
+															.getSimpleName()
+													+ " = " + idMaster);
 								}
 
 							} else {
@@ -968,51 +1004,66 @@ public class Jpdroid {
 
 	}
 
-	private void persistRelationEntity(List<ContentValues> values, String joinTable, String whereAll) 
-	{
-	
-		if(!values.isEmpty()){
-			
+	private void persistRelationEntity(List<ContentValues> values,
+			String joinTable, String whereAll) {
+
+		if (!values.isEmpty()) {
+
 			List<String> chaves = new ArrayList<String>();
 			for (ContentValues contentValues : values) {
 				String where = "";
-				for(Entry<String, Object> e : contentValues.valueSet()) {
-					if(chaves.size() < 2){
+				for (Entry<String, Object> e : contentValues.valueSet()) {
+					if (chaves.size() < 2) {
 						chaves.add(e.getKey());
 					}
-					
-					where += where.length() == 0 ? e.getKey()+" = "+e.getValue().toString() : " and "+ e.getKey()+" = "+e.getValue().toString();
-			   
-			    }
-							
-				if(database.rawQuery("SELECT * FROM "+joinTable+" WHERE "+where,null).getCount() == 0){
+
+					where += where.length() == 0 ? e.getKey() + " = "
+							+ e.getValue().toString() : " and " + e.getKey()
+							+ " = " + e.getValue().toString();
+
+				}
+
+				if (database.rawQuery(
+						"SELECT * FROM " + joinTable + " WHERE " + where, null)
+						.getCount() == 0) {
 					insert(contentValues, joinTable);
 				}
-				
+
 			}
-			
-			Cursor registros = database.rawQuery("SELECT * FROM "+joinTable+" WHERE "+whereAll,null);
+
+			Cursor registros = database.rawQuery("SELECT * FROM " + joinTable
+					+ " WHERE " + whereAll, null);
 			registros.moveToFirst();
-			do{
-		
+			do {
+
 				int count = 0;
 				for (ContentValues contentValues : values) {
-					if(contentValues.getAsLong(chaves.get(0)) == registros.getLong(registros.getColumnIndex(chaves.get(0))) && 
-							contentValues.getAsLong(chaves.get(1)) == registros.getLong(registros.getColumnIndex(chaves.get(1)))){
+					if (contentValues.getAsLong(chaves.get(0)) == registros
+							.getLong(registros.getColumnIndex(chaves.get(0)))
+							&& contentValues.getAsLong(chaves.get(1)) == registros
+									.getLong(registros.getColumnIndex(chaves
+											.get(1)))) {
 						count++;
 					}
 				}
-				if(count == 0){
-					String whereDelete = chaves.get(0) + " = "+ String.valueOf(registros.getLong(registros.getColumnIndex(chaves.get(0))))+" AND "+
-					chaves.get(1) + " = "+ String.valueOf(registros.getLong(registros.getColumnIndex(chaves.get(1))));
-					
-					database.execSQL("DELETE FROM "+joinTable+" WHERE "+whereDelete.toString());
+				if (count == 0) {
+					String whereDelete = chaves.get(0)
+							+ " = "
+							+ String.valueOf(registros.getLong(registros
+									.getColumnIndex(chaves.get(0))))
+							+ " AND "
+							+ chaves.get(1)
+							+ " = "
+							+ String.valueOf(registros.getLong(registros
+									.getColumnIndex(chaves.get(1))));
+
+					database.execSQL("DELETE FROM " + joinTable + " WHERE "
+							+ whereDelete.toString());
 				}
-				
-				
+
 			} while (registros.moveToNext());
-		}else{
-			database.execSQL("DELETE FROM "+joinTable+" WHERE "+whereAll);
+		} else {
+			database.execSQL("DELETE FROM " + joinTable + " WHERE " + whereAll);
 		}
 	}
 
@@ -1162,7 +1213,8 @@ public class Jpdroid {
 				chaveValor.put(colunas[i].trim(), valores[i].trim());
 			}
 
-			Class<?> classe = Class.forName(entidades.get(comando[1]));
+			Class<?> classe = Class.forName(entidades.get(comando[1].trim()
+					.toUpperCase()));
 			Field[] fields = classe.getDeclaredFields();
 			query = "SELECT * FROM " + comando[1];
 

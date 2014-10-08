@@ -91,11 +91,15 @@ public class ProdutoActivity extends TabActivity {
 			produto.setNome(etNome.getText().toString());
 			produto.setUnidadeMedida(spUnidadeMedida.getSelectedItem().toString());
 			
-			if(etQuantidade.getText() != null){
+			if(etQuantidade.getText() != null && etQuantidade.getText().toString().length() > 0){
 				produto.setQuantidade(Double.valueOf(etQuantidade.getText().toString()));
+			}else{
+				produto.setQuantidade(0.0);
 			}
-			if(etPreco.getText() != null){
+			if(etPreco.getText() != null && etPreco.getText().toString().length() > 0){
 				produto.setPreco(Double.valueOf(etPreco.getText().toString()));
+			}else{
+				produto.setPreco(0.0);
 			}
 			produto.setFoto(loadBitmapFromView(ivFoto));
 

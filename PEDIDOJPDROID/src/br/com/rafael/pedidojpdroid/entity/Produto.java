@@ -10,7 +10,7 @@ public class Produto  {
 
   
 	@PrimaryKey
-	@Column
+	@Column(unique=true)
 	private long _id;
 	
 	@Column
