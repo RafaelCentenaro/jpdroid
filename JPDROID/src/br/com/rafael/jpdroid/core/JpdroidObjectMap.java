@@ -208,7 +208,9 @@ public class JpdroidObjectMap {
 
 			PrimaryKey annotationId = field.getAnnotation(PrimaryKey.class);
 			Column annotationColumn = field.getAnnotation(Column.class);
+			ForeignKey foreignKey = field.getAnnotation(ForeignKey.class);
 
+	
 			if (annotationId != null) {
 				continue;
 			}
@@ -220,11 +222,15 @@ public class JpdroidObjectMap {
 				}
 
 				try {
+					field.setAccessible(true);
+					if (foreignKey != null && String.valueOf(field.get(object)).equalsIgnoreCase("0") ) {
+						
+						continue;
+					}
 					if (("Byte[]".equalsIgnoreCase(field.getType().getSimpleName()))
 					    || ("Bitmap".equalsIgnoreCase(field.getType().getSimpleName()))) {
 						ByteArrayOutputStream baos = new ByteArrayOutputStream();
 						Bitmap foto = null;
-						field.setAccessible(true);
 
 						Object valor = field.get(object);
 						if (valor != null) {
@@ -240,11 +246,9 @@ public class JpdroidObjectMap {
 					} 
 					else if( ("java.util.Date".equals(field.getType().getName())) || ("java.sql.Date".equals(field.getName()))
 					    || ("Calendar".equals(field.getType().getSimpleName()))){
-						field.setAccessible(true);
 						values.put(columnName, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(field.get(object)));
 					}
 					else {
-						field.setAccessible(true);
 						values.put(columnName, String.valueOf(field.get(object)));
 					}
 
