@@ -34,6 +34,7 @@ import br.com.rafael.jpdroid.annotations.Column;
 import br.com.rafael.jpdroid.annotations.PrimaryKey;
 import br.com.rafael.jpdroid.annotations.RelationClass;
 import br.com.rafael.jpdroid.annotations.ViewColumn;
+import br.com.rafael.jpdroid.converters.JpdroidDateUtil;
 import br.com.rafael.jpdroid.enums.RelationType;
 import br.com.rafael.jpdroid.enums.ScriptPath;
 import br.com.rafael.jpdroid.exceptions.JpdroidException;
@@ -715,18 +716,23 @@ public class Jpdroid {
 						field.setAccessible(true);
 
 						if ("String".equalsIgnoreCase(field.getType()
-								.getSimpleName())
-								|| ("java.util.Date".equals(field.getType()
-										.getSimpleName()))
-								|| ("java.sql.Date".equals(field.getType()
-										.getSimpleName()))
-								|| ("Calendar".equals(field.getType()
-										.getSimpleName()))) {
+								.getSimpleName())) {
 
 							field.set(retorno, cursor.getString(cursor
 									.getColumnIndex(columnName)));
 
-						} else if ("Boolean".equalsIgnoreCase(field.getType()
+						} else if (("java.util.Date".equals(field.getType()
+								.getName()))
+								|| ("java.sql.Date".equals(field.getType()
+										.getName()))
+								|| ("Calendar".equals(field.getType()
+										.getSimpleName())))
+							field.set(retorno, JpdroidDateUtil.convert(cursor
+									.getString(cursor
+											.getColumnIndex(columnName)), field
+									.getType()));
+
+						else if ("Boolean".equalsIgnoreCase(field.getType()
 								.getSimpleName())) {
 
 							field.set(retorno, Boolean.valueOf(cursor
