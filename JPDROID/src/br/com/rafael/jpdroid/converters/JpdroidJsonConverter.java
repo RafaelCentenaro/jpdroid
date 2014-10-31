@@ -94,7 +94,6 @@ public class JpdroidJsonConverter {
 			cursor.moveToNext();
 		}
 
-		cursor.close();
 		Log.d("TAG_NAME", resultSet.toString());
 		return resultSet;
 	}

@@ -133,7 +133,6 @@ public class JpdroidCsvConverter {
 			cursor.moveToNext();
 		}
 
-		cursor.close();
 		arquivo.insert(0, cabecalho);
 		return arquivo.toString();
 	}
