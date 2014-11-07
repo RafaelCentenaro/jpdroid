@@ -11,6 +11,9 @@ public class JpdroidDateUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T convert(String string, Class<T> type) {
 		try {
+			if(string == null || string.trim().length() == 0){
+				return null;
+			}
 			if (type.getName().equals("java.util.Date")) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
