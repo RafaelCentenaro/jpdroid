@@ -9,13 +9,16 @@ import static br.com.rafael.jpdroid.core.JpdroidObjectMap.getFieldsByRelationCla
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -23,7 +26,9 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorWindow;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.graphics.Bitmap;
@@ -46,7 +51,7 @@ import br.com.rafael.jpdroid.exceptions.JpdroidException;
  */
 public class Jpdroid {
 
-	TreeMap<String, String> entidades = new TreeMap<String, String>();
+	private TreeMap<String, String> entidades = new TreeMap<String, String>();
 
 	private SQLiteDatabase database;
 
@@ -217,6 +222,329 @@ public class Jpdroid {
 		if (isOpen()) {
 			dbHelper.close();
 		}
+	}
+
+	/**
+	 * Restaura o banco de dados a partir do arquivo de backup
+	 * ("backupJpdroid.jpdroid") criado no cartão sd. Atenção: Este método irá
+	 * reconstruir a base de dados para depois importar e executar o script de
+	 * backup, ao reconstuir a base todos os dados serão perdidos, e os
+	 * registros do script serão inseridos.
+	 * 
+	 * @return
+	 */
+	public int importDbScript() {
+		String processName = this.getContext().getApplicationInfo().processName;
+		processName = processName.replace('.', '_');
+		return importDbScript(processName + ".bkp");
+	}
+
+	/**
+	 * Restaura o banco de dados a partir do arquivo de backup cujo nome será
+	 * passado por parâmetro, arquivo que deve estar criado no cartão sd.
+	 * Atenção: Este método irá reconstruir a base de dados para depois importar
+	 * e executar o script de backup, ao reconstuir a base todos os dados serão
+	 * perdidos, e os registros do script serão inseridos.
+	 * 
+	 * @return
+	 */
+	public int importDbScript(String fileName) {
+		int retorno = -1;
+
+		if (Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED)) {
+			File dir = Environment.getExternalStorageDirectory();
+			File file = new File(dir, fileName);
+			if (file.exists()) {
+
+				dbHelper.regenerateDB(database);
+				retorno = importSqlScript(ScriptPath.SdCard, fileName);
+				database.execSQL("PRAGMA foreign_keys = ON;");
+			}
+		}
+		return retorno;
+	}
+
+	/**
+	 * Permite forçar a cricação de uma tabela.
+	 * 
+	 * @param entity
+	 */
+	public void createTable(Class<?> entity) {
+		try {
+			dbHelper.setDropTable(true);
+
+			dbHelper.createTable(database, entity);
+
+			dbHelper.setDropTable(false);
+		} catch (JpdroidException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Habilita as constraints para chaves estrangeiras.
+	 */
+	public void foreignKeysOn() {
+		database.execSQL("PRAGMA foreign_keys = ON;");
+	}
+
+	/**
+	 * Desabilita as constraints para chaves estrangeiras.
+	 */
+	public void foreignKesOff() {
+		database.execSQL("PRAGMA foreign_keys = OFF;");
+	}
+
+	private static String byteArrayToHex(byte[] a) {
+		StringBuilder sb = new StringBuilder(a.length * 2);
+		for (byte b : a)
+			sb.append(String.format("%02x", b & 0xff));
+		return sb.toString();
+	}
+
+	/**
+	 * Cria arquivo de backup chamado "br_com_nome_pacote.bkp" no cartão sd.
+	 */
+	public int exportDbScript() {
+		String processName = this.getContext().getApplicationInfo().processName;
+		processName = processName.replace('.', '_');
+		return exportDbScript(processName + ".bkp");
+	}
+
+	/**
+	 * Cria arquivo de backup cujo nome será passado por parâmetro e este será
+	 * criado no cartão sd.
+	 */
+
+	public int exportDbScript(String fileName) {
+		File dir = Environment.getExternalStorageDirectory();
+		File file = new File(dir, fileName);
+		return exportDbScript(file);
+	}
+
+	/**
+	 * Exporta script dos dados do banco para referência do arquivo instânciado
+	 * através classe "File".
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public int exportDbScript(File file) {
+
+		try {
+			StringBuilder arquivo = new StringBuilder();
+			for (Map.Entry<String, String> entry : entidades.entrySet()) {
+				Cursor cursor = query(entry.getKey());
+
+				if (cursor.getCount() > 0) {
+					String linha = "";
+					String columns = "", values = "";
+					cursor.moveToFirst();
+
+					SQLiteCursor sqLiteCursor = (SQLiteCursor) cursor;
+					CursorWindow cursorWindow = sqLiteCursor.getWindow();
+
+					while (cursor.isAfterLast() == false) {
+						int totalColumn = cursor.getColumnCount();
+						linha = "INSERT INTO " + entry.getKey() + " ";
+						columns = "";
+						values = "";
+						for (int i = 0; i < totalColumn; i++) {
+							if (cursor.getColumnName(i) != null) {
+								if (columns.length() == 0) {
+									columns = cursor.getColumnName(i);
+								} else {
+									columns += "," + cursor.getColumnName(i);
+								}
+								try {
+
+									if (cursorWindow.isBlob(
+											cursor.getPosition(), i)
+											&& !cursorWindow.isNull(
+													cursor.getPosition(), i)) {
+										if (values.length() == 0) {
+
+											values = "X'"
+													+ byteArrayToHex(cursor
+															.getBlob(i)) + "'";
+										} else {
+											values += ",X'"
+													+ byteArrayToHex(cursor
+															.getBlob(i)) + "'";
+										}
+									} else if (cursorWindow.isNull(
+											cursor.getPosition(), i)) {
+										if (values.length() == 0) {
+											values = "null";
+										} else {
+											values += ",null";
+										}
+									} else {
+										if (cursor.getString(i) != null) {
+											if (values.length() == 0) {
+												if (cursorWindow
+														.isString(cursor
+																.getPosition(),
+																i)) {
+													values = "'"
+															+ cursor.getString(i)
+															+ "'";
+												} else {
+													values = cursor
+															.getString(i);
+												}
+
+											} else {
+												if (cursorWindow
+														.isString(cursor
+																.getPosition(),
+																i)) {
+													values += ", '"
+															+ cursor.getString(i)
+															+ "'";
+												} else {
+													values += ","
+															+ cursor.getString(i);
+												}
+
+											}
+										} else {
+											if (values.length() == 0) {
+												values = "null";
+											} else {
+												values += ",null";
+											}
+										}
+									}
+								} catch (Exception e) {
+									Log.d("error", e.getMessage());
+								}
+							}
+
+						}
+						linha += "(" + columns + ") VALUES (" + values + ");";
+						arquivo.append(linha);
+						arquivo.append("\n");
+						cursor.moveToNext();
+					}
+				}
+			}
+
+			if (arquivo.length() == 0) {
+				return 0;
+			}
+
+			JpdroidWriteFile.writeFile(file, arquivo.toString());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return 1;
+
+	}
+
+	/**
+	 * Importa arquivo databaseName.db do cartão. Atenção: Este método irá
+	 * substituir a base de dados atual pela versão do backup, este processo uma
+	 * vez executado não permite o cancelamento.
+	 * 
+	 * @return
+	 */
+	public int importDbFile() {
+		File sd = Environment.getExternalStorageDirectory();
+		File currentDB = new File(sd, databaseName);
+		return importDbFile(currentDB);
+	}
+
+	/**
+	 * Importa arquivo arquivo através da referência instanciada pela classe
+	 * "File" Atenção: Este método irá substituir a base de dados atual pela
+	 * versão do backup, este processo uma vez executado não permite o
+	 * cancelamento.
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("resource")
+	public int importDbFile(File currentDB) {
+		try {
+			File data = Environment.getDataDirectory();
+
+			if (currentDB.canRead()) {
+				String currentDBPath = "//data//"
+						+ this.getContext().getPackageName() + "//databases//"
+						+ databaseName;
+
+				File backupDB = new File(data, currentDBPath);
+
+				FileChannel src = new FileInputStream(currentDB).getChannel();
+				FileChannel dst = new FileOutputStream(backupDB).getChannel();
+				dst.transferFrom(src, 0, src.size());
+				src.close();
+				dst.close();
+
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+
+			return -1;
+
+		}
+		return 1;
+	}
+
+	/**
+	 * Exporta copia do arquivo do banco de dados para o cartão.
+	 * 
+	 * @return
+	 */
+	public int exportDbFile() {
+
+		File sd = Environment.getExternalStorageDirectory();
+		File backupDB = new File(sd, databaseName);
+		return exportDbFile(backupDB);
+	}
+
+	/**
+	 * Exporta copia do arquivo do banco de dados para referencia do arquivo
+	 * instanciada através da classe "File"
+	 * 
+	 * @param backupDB
+	 * @return
+	 */
+	@SuppressWarnings("resource")
+	public int exportDbFile(File backupDB) {
+		try {
+
+			File data = Environment.getDataDirectory();
+			if (!backupDB.exists()) {
+				backupDB.createNewFile();
+			}
+
+			if (backupDB.canWrite()) {
+				String currentDBPath = "//data//"
+						+ this.getContext().getPackageName() + "//databases//"
+						+ databaseName;
+
+				File currentDB = new File(data, currentDBPath);
+
+				FileChannel src = new FileInputStream(currentDB).getChannel();
+				FileChannel dst = new FileOutputStream(backupDB).getChannel();
+				dst.transferFrom(src, 0, src.size());
+				src.close();
+				dst.close();
+
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+
+			return -1;
+
+		}
+		return 1;
 	}
 
 	private void validar() throws JpdroidException {
@@ -616,7 +944,7 @@ public class Jpdroid {
 					null);
 			cursor.moveToFirst();
 			if (cursor.getCount() == 0) {
-				entityList.add(entity.newInstance());
+				// entityList.add(entity.newInstance());
 				return entityList;
 			}
 			do {
@@ -754,15 +1082,20 @@ public class Jpdroid {
 						} else if (("Integer".equals(field.getType()
 								.getSimpleName()))
 								|| ("int".equals(field.getType()
-										.getSimpleName()))
-								|| ("Long".equalsIgnoreCase(field.getType()
-										.getSimpleName()))
-								|| ("Short".equalsIgnoreCase(field.getType()
 										.getSimpleName()))) {
 
 							field.set(retorno, cursor.getInt(cursor
 									.getColumnIndex(columnName)));
 
+						} else if ("Long".equalsIgnoreCase(field.getType()
+								.getSimpleName())) {
+							field.set(retorno, cursor.getLong(cursor
+									.getColumnIndex(columnName)));
+
+						} else if ("Short".equalsIgnoreCase(field.getType()
+								.getSimpleName())) {
+							field.set(retorno, cursor.getShort(cursor
+									.getColumnIndex(columnName)));
 						} else if (("Byte[]".equalsIgnoreCase(field.getType()
 								.getSimpleName()))
 								|| ("Bitmap".equalsIgnoreCase(field.getType()
@@ -1073,6 +1406,11 @@ public class Jpdroid {
 		}
 	}
 
+	private Cursor query(String entity) {
+		Cursor cursor = database.rawQuery("select * from " + entity, null);
+		return cursor;
+	}
+
 	/**
 	 * @param table
 	 * @param columns
@@ -1127,11 +1465,10 @@ public class Jpdroid {
 	 */
 	public int importSqlScript(ScriptPath scriptUri, String fileName) {
 		try {
-			String readLine = "";
 			BufferedReader reader = null;
 			if (scriptUri == ScriptPath.Assets) {
 				reader = new BufferedReader(new InputStreamReader(getContext()
-						.getAssets().open(fileName), "ISO-8859-15"));
+						.getAssets().open(fileName)));
 
 			} else {
 				if (Environment.getExternalStorageState().equals(
@@ -1142,12 +1479,37 @@ public class Jpdroid {
 						return 0;
 					}
 					reader = new BufferedReader(new InputStreamReader(
-							new FileInputStream(file), "ISO-8859-15"));
+							new FileInputStream(file)));
 				} else {
 					throw new JpdroidException(
 							"Nenhum cartão de memória foi localizado!");
 				}
 			}
+			return importSqlScript(reader);
+		} catch (Exception e) {
+			Log.e("Erro Importar arquivo sql.", e.getMessage());
+			return -1;
+		}
+	}
+
+	public int importSqlScript(File file) {
+		try {
+			if (!file.exists()) {
+				return 0;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream(file)));
+			return importSqlScript(reader);
+		} catch (Exception e) {
+			Log.e("Erro Importar arquivo sql.", e.getMessage());
+			return -1;
+		}
+	}
+
+	public int importSqlScript(BufferedReader reader) {
+		try {
+			String readLine = "";
+
 			StringBuffer script = new StringBuffer();
 			while ((readLine = reader.readLine()) != null) {
 				script.append(readLine);

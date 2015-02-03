@@ -115,9 +115,12 @@ public class JpdroidDbHelper extends SQLiteOpenHelper {
 			Log.e("Erro createTables()", e.getMessage());
 		}
 
-		dbConfiguration = null;
 	}
 
+	public void createTable(SQLiteDatabase db,
+			Class<?> entity) throws JpdroidException {
+		createTable(db,dbConfiguration.getEntidades(),entity);
+	}
 	private void createTable(SQLiteDatabase db, List<Class<?>> entidades,
 			Class<?> entity) throws JpdroidException {
 		
@@ -254,6 +257,14 @@ public class JpdroidDbHelper extends SQLiteOpenHelper {
 			return dbConfiguration.getEntidades().size() > 0;
 		}
 		return true;
+	}
+
+	public void regenerateDB(SQLiteDatabase db) {
+		this.setDropTable(true);
+		db.execSQL("PRAGMA foreign_keys = OFF;");
+		onCreate(db);
+		this.setDropTable(false);
+		
 	}
 
 }

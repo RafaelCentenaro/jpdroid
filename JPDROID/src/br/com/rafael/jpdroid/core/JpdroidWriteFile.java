@@ -15,22 +15,35 @@ import br.com.rafael.jpdroid.exceptions.JpdroidException;
  */
 public class JpdroidWriteFile {
 
-	protected static void writeFile(String str, String fileName) throws Exception {
+	protected static void writeFile(File file, String str) throws Exception {
+		FileWriter fw = new FileWriter(file);
+		fw.write(str);
+		fw.close();
+	}
+
+	protected static void writeFile(File dir, String str, String fileName)
+			throws Exception {
+
+		File file = new File(dir, fileName);
+		writeFile(file, str);
+	}
+
+	protected static void writeFile(String str, String fileName)
+			throws Exception {
 		if (isSDPresent()) {
 			File dir = Environment.getExternalStorageDirectory();
-			File file = new File(dir, fileName);
-
-			FileWriter fw = new FileWriter(file);
-			fw.write(str);
-			fw.close();
+			writeFile(dir, str, fileName);
 		} else {
-			Log.e("JpdroidException", "Nenhum cartão de memória foi localizado!");
-			throw new JpdroidException("Nenhum cartão de memória foi localizado!");
+			Log.e("JpdroidException",
+					"Nenhum cartão de memória foi localizado!");
+			throw new JpdroidException(
+					"Nenhum cartão de memória foi localizado!");
 		}
 	}
 
 	private static boolean isSDPresent() {
-		return Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+		return Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
 
 	}
 
