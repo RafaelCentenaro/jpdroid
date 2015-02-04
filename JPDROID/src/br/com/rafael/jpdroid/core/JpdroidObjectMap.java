@@ -10,9 +10,10 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.graphics.Bitmap;
+import android.util.Log;
 import br.com.rafael.jpdroid.annotations.Column;
-import br.com.rafael.jpdroid.annotations.ForeignKey;
 import br.com.rafael.jpdroid.annotations.DefaultOrder;
+import br.com.rafael.jpdroid.annotations.ForeignKey;
 import br.com.rafael.jpdroid.annotations.PrimaryKey;
 import br.com.rafael.jpdroid.annotations.RelationClass;
 import br.com.rafael.jpdroid.enums.RelationType;
@@ -31,7 +32,8 @@ public class JpdroidObjectMap {
 	 * @param referenceEntity
 	 * @return Field[]
 	 */
-	public static Field[] getFieldsByForeignKey(Object item, String referenceEntity) {
+	public static Field[] getFieldsByForeignKey(Object item,
+			String referenceEntity) {
 		List<Field> fields = new ArrayList<Field>();
 
 		Field[] declaredFields = item.getClass().getDeclaredFields();
@@ -39,7 +41,9 @@ public class JpdroidObjectMap {
 
 			ForeignKey annotation = field.getAnnotation(ForeignKey.class);
 
-			if (annotation != null && annotation.joinEntity().getSimpleName().equals(referenceEntity)) {
+			if (annotation != null
+					&& annotation.joinEntity().getSimpleName()
+							.equals(referenceEntity)) {
 				fields.add(field);
 			}
 
@@ -53,7 +57,8 @@ public class JpdroidObjectMap {
 	 * @param entity
 	 * @return Field[]
 	 */
-	public static Field[] getFieldsByRelationClass(Object entity, RelationType relationType) {
+	public static Field[] getFieldsByRelationClass(Object entity,
+			RelationType relationType) {
 		List<Field> fields = new ArrayList<Field>();
 
 		Field[] declaredFields = entity.getClass().getDeclaredFields();
@@ -62,11 +67,13 @@ public class JpdroidObjectMap {
 			RelationClass annotation = field.getAnnotation(RelationClass.class);
 			if (annotation != null && !annotation.Transient()) {
 				if (relationType == RelationType.OneToMany) {
-					if ((annotation.relationType() == relationType || annotation.relationType() == RelationType.OneToOne)) {
+					if ((annotation.relationType() == relationType || annotation
+							.relationType() == RelationType.OneToOne)) {
 						fields.add(field);
 					}
 				} else {
-					if ((annotation.relationType() == relationType || annotation.relationType() == RelationType.ManyToMany)) {
+					if ((annotation.relationType() == relationType || annotation
+							.relationType() == RelationType.ManyToMany)) {
 						fields.add(field);
 					}
 				}
@@ -83,7 +90,8 @@ public class JpdroidObjectMap {
 	 * @param annotationClass
 	 * @return Field
 	 */
-	public static Field getFieldByAnnotation(Object entity, Class<? extends Annotation> annotationClass) {
+	public static Field getFieldByAnnotation(Object entity,
+			Class<? extends Annotation> annotationClass) {
 		Field[] fields = entity.getClass().getDeclaredFields();
 		for (Field field : fields) {
 
@@ -96,16 +104,17 @@ public class JpdroidObjectMap {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Retorna os campos configurados pela anotação Order.
+	 * 
 	 * @param entity
 	 * @return
 	 */
-	public static String getDefaultOrderBy(Class<?> entity){
-		
+	public static String getDefaultOrderBy(Class<?> entity) {
+
 		String orderBy = "";
-		
+
 		Field[] fieldOrderBy = entity.getDeclaredFields();
 		for (Field field : fieldOrderBy) {
 			DefaultOrder order = field.getAnnotation(DefaultOrder.class);
@@ -113,7 +122,7 @@ public class JpdroidObjectMap {
 				if (orderBy.length() == 0) {
 					orderBy = field.getName() + " " + order.order();
 				} else {
-					orderBy += ", "+field.getName() + " " + order.order();
+					orderBy += ", " + field.getName() + " " + order.order();
 				}
 			}
 		}
@@ -121,13 +130,15 @@ public class JpdroidObjectMap {
 	}
 
 	/**
-	 * Retorna um array de campos identificados pela anotação passada por parâmetro.
+	 * Retorna um array de campos identificados pela anotação passada por
+	 * parâmetro.
 	 * 
 	 * @param entity
 	 * @param annotationClass
 	 * @return Field[]
 	 */
-	public static Field[] getFieldsByAnnotation(Object entity, Class<? extends Annotation>... annotationClass) {
+	public static Field[] getFieldsByAnnotation(Object entity,
+			Class<? extends Annotation>... annotationClass) {
 		List<Field> fields = new ArrayList<Field>();
 		for (Class<? extends Annotation> class1 : annotationClass) {
 			Field[] fieldChild = getFieldsByAnnotation(entity, class1);
@@ -138,7 +149,8 @@ public class JpdroidObjectMap {
 		return fields.toArray(new Field[fields.size()]);
 	}
 
-	public static Field[] getFieldsByAnnotation(Object entity, Class<? extends Annotation> annotationClass) {
+	public static Field[] getFieldsByAnnotation(Object entity,
+			Class<? extends Annotation> annotationClass) {
 		List<Field> fields = new ArrayList<Field>();
 
 		Field[] declaredFields = entity.getClass().getDeclaredFields();
@@ -165,7 +177,8 @@ public class JpdroidObjectMap {
 		return getColumns(entity, Column.class);
 	}
 
-	public static String[] getColumns(Class<?> entity, Class<? extends Annotation>... annotationClass) {
+	public static String[] getColumns(Class<?> entity,
+			Class<? extends Annotation>... annotationClass) {
 		List<String> colunas = new ArrayList<String>();
 		Field[] fields = entity.getDeclaredFields();
 		String columnName = null;
@@ -193,11 +206,12 @@ public class JpdroidObjectMap {
 	/**
 	 * Retorna o ContentValues referente ao objeto.
 	 * 
-	 * @param object - Instância da entidade.
+	 * @param object
+	 *            - Instância da entidade.
 	 * @return - ContentValues
 	 */
 	@SuppressLint("SimpleDateFormat")
-  public static ContentValues getContentvalues(Object object) {
+	public static ContentValues getContentvalues(Object object) {
 		Class<?> entity = object.getClass();
 
 		ContentValues values = new ContentValues();
@@ -210,7 +224,6 @@ public class JpdroidObjectMap {
 			Column annotationColumn = field.getAnnotation(Column.class);
 			ForeignKey foreignKey = field.getAnnotation(ForeignKey.class);
 
-	
 			if (annotationId != null) {
 				continue;
 			}
@@ -223,12 +236,16 @@ public class JpdroidObjectMap {
 
 				try {
 					field.setAccessible(true);
-					if (foreignKey != null && String.valueOf(field.get(object)).equalsIgnoreCase("0") ) {
-						
+					if (foreignKey != null && field.get(object) == null
+							|| String.valueOf(field.get(object)).equals("0")) {
+
 						continue;
+
 					}
-					if (("Byte[]".equalsIgnoreCase(field.getType().getSimpleName()))
-					    || ("Bitmap".equalsIgnoreCase(field.getType().getSimpleName()))) {
+					if (("Byte[]".equalsIgnoreCase(field.getType()
+							.getSimpleName()))
+							|| ("Bitmap".equalsIgnoreCase(field.getType()
+									.getSimpleName()))) {
 						ByteArrayOutputStream baos = new ByteArrayOutputStream();
 						Bitmap foto = null;
 
@@ -243,17 +260,23 @@ public class JpdroidObjectMap {
 
 							values.put(columnName, photo);
 						}
-					} 
-					else if( ("java.util.Date".equals(field.getType().getName())) || ("java.sql.Date".equals(field.getName()))
-					    || ("Calendar".equals(field.getType().getSimpleName()))){
-						values.put(columnName, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(field.get(object)));
-					}
-					else {
-						values.put(columnName, String.valueOf(field.get(object)));
+					} else if (("java.util.Date".equals(field.getType()
+							.getName()))
+							|| ("java.sql.Date".equals(field.getName()))
+							|| ("Calendar".equals(field.getType()
+									.getSimpleName()))) {
+
+						values.put(columnName,
+								new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+										.format(field.get(object)));
+					} else {
+
+						values.put(columnName,
+								String.valueOf(field.get(object)));
 					}
 
 				} catch (Exception e) {
-					e.printStackTrace();
+					Log.e("getContentvalues", e.getMessage());
 				}
 			}
 		}

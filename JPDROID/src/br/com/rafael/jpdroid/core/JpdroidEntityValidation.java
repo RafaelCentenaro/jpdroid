@@ -51,9 +51,6 @@ public class JpdroidEntityValidation {
 					if(!field.getType().getSimpleName().equalsIgnoreCase("long")){
 						throw new JpdroidException("O tipo para chave primária deve ser long.");
 					}
-					if(!field.getType().isPrimitive() || !field.getType().getSimpleName().equalsIgnoreCase("long")){
-						throw new JpdroidException("A Chave primária deve ser do tipo primitivo long.");
-					}
 					columnName = field.getName();
 					if((columnName.equals("") && !field.getName().equals("_id")) || (!columnName.equals("") && !columnName.equals("_id"))){
 						throw new JpdroidException("As tabelas no SQLite devem possuir um atributo '_id'  como chave primária.");
@@ -75,9 +72,7 @@ public class JpdroidEntityValidation {
 					if(((ForeignKey)annotation).joinEntity().getAnnotation(Entity.class) == null){
 						throw new JpdroidException("O parâmetro joinEntity possui relacionamento inválido, pois a classe "+((ForeignKey)annotation).joinEntity().getSimpleName()+" não possui anotação @Entity.");
 					}
-					if(!field.getType().isPrimitive() || !field.getType().getSimpleName().equalsIgnoreCase("long")){
-						throw new JpdroidException("A Chave estrangeira '"+field.getName()+"' deve ser do tipo primitivo long.");
-					}
+
 					if(((ForeignKey)annotation).joinPrimaryKey().equalsIgnoreCase("")){
 						throw new JpdroidException("O parâmetro joinPrimaryKey da anotação @ForeignKey não pode ser vazio.");
 					}

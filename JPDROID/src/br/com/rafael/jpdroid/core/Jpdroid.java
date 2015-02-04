@@ -698,16 +698,16 @@ public class Jpdroid {
 	 *            - Instância da entidade.
 	 * @return - retorna o id
 	 */
-	private long insert(Object entity) {
+	private Long insert(Object entity) {
 
 		ContentValues values = getContentvalues(entity);
 
 		return insert(values, entity.getClass().getSimpleName());
 	}
 
-	private long insert(ContentValues values, String tableName) {
+	private Long insert(ContentValues values, String tableName) {
 
-		long insertId = database.insert(tableName, null, values);
+		Long insertId = Long.valueOf(database.insert(tableName, null, values));
 
 		return insertId;
 	}
@@ -719,9 +719,9 @@ public class Jpdroid {
 	 *            - Instância da entidade.
 	 * @return 1:Sucesso, -1:Erro, 0:falhou
 	 */
-	private long update(Object entity) {
+	private Long update(Object entity) {
 
-		long insertId = 0;
+		Long insertId = 0L;
 		try {
 
 			ContentValues values = getContentvalues(entity);
@@ -761,9 +761,9 @@ public class Jpdroid {
 
 			}
 
-			insertId = database.update(entity.getClass().getSimpleName(),
+			insertId = Long.valueOf(database.update(entity.getClass().getSimpleName(),
 					values, whereClause.toString(),
-					whereArgs.toArray(new String[whereArgs.size()]));
+					whereArgs.toArray(new String[whereArgs.size()])));
 
 		} catch (Exception e) {
 
@@ -1165,9 +1165,9 @@ public class Jpdroid {
 	 * @param entity
 	 * @return
 	 */
-	private long persistRecursivo(Object entity) {
+	private Long persistRecursivo(Object entity) {
 
-		long idMaster = 0;
+		Long idMaster = 0L;
 		try {
 			// Persiste objetos da lista
 			if (entity instanceof List) {
@@ -1188,7 +1188,8 @@ public class Jpdroid {
 						if (child != null) {
 							if (child instanceof List) {
 								for (Object item : ((List<?>) child)) {
-									long idItem = persistRecursivo(item);
+									Long idItem = persistRecursivo(item);
+
 									Field[] fieldForeingKeyList = getFieldsByForeignKey(
 											entity, item.getClass()
 													.getSimpleName());
@@ -1196,17 +1197,16 @@ public class Jpdroid {
 									if (fieldForeingKeyList != null) {
 
 										for (int u = 0; u < fieldForeingKeyList.length; u++) {
-
 											fieldForeingKeyList[u]
 													.setAccessible(true);
-											fieldForeingKeyList[u].setLong(
+											fieldForeingKeyList[u].set(
 													entity, idItem);
 										}
 
 									}
 								}
 							} else {
-								long idItem = persistRecursivo(child);
+								Long idItem = persistRecursivo(child);
 								Field[] fieldForeingKeyList = getFieldsByForeignKey(
 										entity, child.getClass()
 												.getSimpleName());
@@ -1217,7 +1217,7 @@ public class Jpdroid {
 
 										fieldForeingKeyList[u]
 												.setAccessible(true);
-										fieldForeingKeyList[u].setLong(entity,
+										fieldForeingKeyList[u].set(entity,
 												idItem);
 									}
 
@@ -1295,7 +1295,7 @@ public class Jpdroid {
 
 												fieldForeingKeyList[u]
 														.setAccessible(true);
-												fieldForeingKeyList[u].setLong(
+												fieldForeingKeyList[u].set(
 														item, idMaster);
 											}
 
@@ -1324,7 +1324,7 @@ public class Jpdroid {
 									for (int u = 0; u < fieldForeingKey.length; u++) {
 
 										fieldForeingKey[u].setAccessible(true);
-										fieldForeingKey[u].setLong(child,
+										fieldForeingKey[u].set(child,
 												idMaster);
 									}
 								}
@@ -1336,7 +1336,7 @@ public class Jpdroid {
 			}
 
 		} catch (Exception e) {
-			idMaster = -1;
+			idMaster = -1L;
 			Log.e("Erro persistRecursivo()", e.getMessage());
 		}
 		return idMaster;
