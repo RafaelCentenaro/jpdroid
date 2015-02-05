@@ -53,6 +53,7 @@ public class PrincipalActivity extends Activity {
 	public void onClickCadPessoa(View v) throws JpdroidException{
 		Intent i = new Intent(this,ListagemPessoaActivity.class);
 		startActivity(i);
+		
 	}
 	public void onClickCadProduto(View v){
 		Intent i = new Intent(this,ListagemProdutoActivity.class);
