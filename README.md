@@ -128,4 +128,6 @@ Para testar as funcionalidades do framework o projeto exemplo possui:
 
 -O relacionamento ManyToMany gera automáticamente a tabela associativa.
 
-*Em breve será disponibilizado um tutorial para faciliar o desenvolvimento.
+-Não é mais obrigatório utilizar o tipo primitivo long para atributos chave-primária ou estrangeira, nesta nova versão é possível trabalhar com o tipo Long.
+
+-Backup e Restore.
