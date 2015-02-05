@@ -29,7 +29,6 @@
             android:background="@android:color/white"
             android:onClick="btnPesquisaOnClick"
             android:src="@android:drawable/ic_menu_search" />
-
     </LinearLayout>
 
     <ListView
@@ -46,11 +45,24 @@
 
         <Button
             android:id="@+id/btnNovoContato"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
             android:onClick="btnNovoContatoOnClick"
-            android:text="Novo Contato" />
+            android:text="Adicionar Pessoa" />
 
+        <Button
+            android:id="@+id/btnBackup"
+            android:layout_width="86dp"
+            android:layout_height="match_parent"
+            android:onClick="btnBackupOnClick"
+            android:text="Backup" />
+
+        <Button
+            android:id="@+id/btnRestore"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="btnRestoreOnClick"
+            android:text="Restore" />
     </LinearLayout>
 
 </LinearLayout>

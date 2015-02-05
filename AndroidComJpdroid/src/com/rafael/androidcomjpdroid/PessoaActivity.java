@@ -113,7 +113,7 @@ public class PessoaActivity extends Activity {
 
 	private void deleteContato(int position) {
 		Contato del = contatos.get(position);
-		if (del.get_id() > 0) {
+		if (del.get_id() != null || del.get_id()  > 0) {
 			database.delete(del);
 		}
 		contatos.remove(position);
@@ -127,7 +127,7 @@ public class PessoaActivity extends Activity {
 
 			if (etNome.getText() == null
 					|| etNome.getText().toString().trim().length() == 0) {
-				Toast.makeText(this, "Nome n„o informado!", Toast.LENGTH_SHORT)
+				Toast.makeText(this, "Nome n√£o informado!", Toast.LENGTH_SHORT)
 						.show();
 				etNome.requestFocus();
 				return;
@@ -159,7 +159,7 @@ public class PessoaActivity extends Activity {
 			if (resultCode == Activity.RESULT_OK && data != null) {
 				Contato novo = (Contato) data.getExtras().getSerializable(
 						"contato");
-				if (novo.get_id() == 0) {
+				if (novo.get_id() == null || novo.get_id() == 0L) {
 					contatos.add(novo);
 				} else {
 					contatos.set(data.getIntExtra("posicao", 0), novo);

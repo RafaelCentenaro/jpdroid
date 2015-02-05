@@ -84,17 +84,38 @@ public class MainActivity extends Activity {
 		startActivityForResult(i, PESSOA);
 
 	}
+	
+	public void btnBackupOnClick(View v) {
+		if (database.exportDbScript() > 0) {
+			Toast.makeText(this, "Backup Realizado com sucesso!",
+					Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(this, "Houve falha ao realizar o backup!",
+					Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	public void btnRestoreOnClick(View v) {
+		if (database.importDbScript() > 0) {
+			Toast.makeText(this, "Backup Restaurado com sucesso!",
+					Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(this, "Houve falha ao restaurar o backup!",
+					Toast.LENGTH_SHORT).show();
+		}
+
+	}
 
 	private void deletePessoa(final int posicao) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Confirma a exclus„o?");
+		builder.setMessage("Confirma a exclus√£o?");
 		builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				if (database.delete(Pessoa.class,
 						(Cursor) lvPessoa.getItemAtPosition(posicao)) <= 0) {
 					Toast.makeText(getBaseContext(),
-							"A pessoa n„o pode ser excluÌda!",
+							"A pessoa n√£o pode ser exclu√≠da!",
 							Toast.LENGTH_SHORT).show();
 				}
 				adquirirPessoas(etPesquisa.getText().toString());
@@ -102,7 +123,7 @@ public class MainActivity extends Activity {
 				dialog.dismiss();
 			}
 		});
-		builder.setNegativeButton("N„o", new DialogInterface.OnClickListener() {
+		builder.setNegativeButton("N√£o", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
@@ -140,7 +161,7 @@ public class MainActivity extends Activity {
 		case R.id.editarPessoa:
 			Intent i = new Intent(this, PessoaActivity.class);
 			Cursor cursor = (Cursor) lvPessoa.getItemAtPosition(info.position);
-			long id = cursor.getLong(cursor.getColumnIndex("_id"));
+			Long id = cursor.getLong(cursor.getColumnIndex("_id"));
 			i.putExtra("_id", id);
 			startActivity(i);
 			break;

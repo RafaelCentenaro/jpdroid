@@ -260,6 +260,8 @@ public class Jpdroid {
 				dbHelper.regenerateDB(database);
 				retorno = importSqlScript(ScriptPath.SdCard, fileName);
 				database.execSQL("PRAGMA foreign_keys = ON;");
+			}else{
+				return 0;
 			}
 		}
 		return retorno;

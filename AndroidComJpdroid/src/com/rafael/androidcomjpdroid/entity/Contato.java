@@ -18,11 +18,11 @@ public class Contato implements Serializable {
 
 	@PrimaryKey
 	@Column
-	private long _id;
+	private Long _id;
 	
 	@ForeignKey(joinEntity=TipoContato.class,joinPrimaryKey="_id")
 	@Column
-	private long idTipoContato;
+	private Long idTipoContato;
 	
 	@Ignorable
 	@ViewColumn(entity=TipoContato.class,foreignKey="idTipoContato", atributo = "descricao")
@@ -30,7 +30,7 @@ public class Contato implements Serializable {
 
 	@ForeignKey(joinEntity=Pessoa.class,joinPrimaryKey="_id",deleteCascade=true)
 	@Column
-	private long idPessoa;
+	private Long idPessoa;
 	
 	@RelationClass(relationType=RelationType.OneToMany, joinColumn="idTipoContato")
 	private TipoContato tipoContato;
@@ -38,19 +38,19 @@ public class Contato implements Serializable {
 	@Column
 	private String contato;
 
-	public long get_id() {
+	public Long get_id() {
 		return _id;
 	}
 
-	public void set_id(long _id) {
+	public void set_id(Long _id) {
 		this._id = _id;
 	}
 
-	public long getIdTipoContato() {
+	public Long getIdTipoContato() {
 		return idTipoContato;
 	}
 
-	public void setIdTipoContato(long idTipoContato) {
+	public void setIdTipoContato(Long idTipoContato) {
 		this.idTipoContato = idTipoContato;
 	}
 
@@ -76,6 +76,14 @@ public class Contato implements Serializable {
 
 	public void setNomeTipoContato(String nomeTipoContato) {
 		this.nomeTipoContato = nomeTipoContato;
+	}
+
+	public Long getIdPessoa() {
+		return idPessoa;
+	}
+
+	public void setIdPessoa(Long idPessoa) {
+		this.idPessoa = idPessoa;
 	}
 	
 
