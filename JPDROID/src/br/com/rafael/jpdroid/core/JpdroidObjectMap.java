@@ -266,11 +266,14 @@ public class JpdroidObjectMap {
 							|| ("Calendar".equals(field.getType()
 									.getSimpleName()))) {
 
-						values.put(columnName,
-								new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-										.format(field.get(object)));
+						Object dateValue = field.get(object);
+						if (dateValue != null) {
+							values.put(columnName, new SimpleDateFormat(
+									"yyyy-MM-dd HH:mm:ss").format(dateValue));
+						} else {
+							values.put(columnName, String.valueOf(dateValue));
+						}
 					} else {
-
 						values.put(columnName,
 								String.valueOf(field.get(object)));
 					}
